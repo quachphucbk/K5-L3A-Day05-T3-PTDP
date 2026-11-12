@@ -479,9 +479,73 @@ Lời hứa này hiện thành trạng thái cụ thể: **chưa đổi → đã
 
 ## §5. Prototype (chặng 5)
 
-- Link hoặc file · công cụ · phần nào mock · có lời gọi AI thật không.
-- 1–2 ảnh có đánh số; mỗi số: thể hiện gì · nguyên tắc HAX/PAIR nào · mức tự chủ nào.
-- Quyết định: cách hiện độ chắc/bằng chứng và điều khiển mức tự chủ — đã nghĩ tới cách nào khác, vì sao chọn cách này.
+
+## 5.2. Thông tin Prototype và bằng chứng
+
+### 1. Thông tin Prototype
+
+- File: index.html (cập nhật đường dẫn theo thư mục thực tế).
+- Công cụ: VS Code + Codex.
+- Công nghệ: HTML, CSS, JavaScript.
+- Số màn hình: 2.
+- Dữ liệu: Mock hoàn toàn bằng dữ liệu giả của đề T3.
+- Chức năng mock: Tra cứu đặt chỗ, chính sách hoàn tiền, gửi yêu cầu hoàn vé, chuyển nhân viên và các tình huống AI mắc lỗi.
+- Lời gọi AI thật: Không.
+- Backend: Không.
+- API key: Không.
+- Mục đích: Mô phỏng giao diện và cách hệ thống xử lý an toàn, không thực hiện giao dịch thật.
+
+### 2. Ảnh minh chứng Prototype
+
+#### Ảnh 1 — AI giải thích và xác nhận hoàn vé
+
+- File ảnh: ![alt text](day05-prototype/image/anh1.png)
+
+- Thể hiện: AI giải thích chính sách hoàn tiền, hiển thị trạng thái đặt chỗ và yêu cầu khách xác nhận trước khi gửi.
+- G10: Không tự gửi hoàn vé khi khách chưa xác nhận.
+- G11: Hiển thị dữ liệu đặt chỗ và căn cứ chính sách.
+- Mức tự chủ:
+  - Tự động: AI tra cứu thông tin.
+  - Cần duyệt: Khách xác nhận trước khi gửi yêu cầu hoàn vé.
+
+#### Ảnh 2 — AI gửi nhầm và xử lý lỗi
+
+- File ảnh: ![day05-prototype/image/anh1.png](day05-prototype/image/anh2.png)
+- Thể hiện: AI gửi nhầm yêu cầu hoàn vé, khách phản đối và hệ thống chuyển nhân viên hỗ trợ.
+- G9: Cho phép người dùng báo lỗi và yêu cầu hỗ trợ.
+- G11: Hiển thị trạng thái yêu cầu, thao tác sai và bằng chứng.
+- Mức tự chủ:
+  - Cấm: AI tự gửi hoàn vé khi chưa được xác nhận.
+  - Chuyển người: Nhân viên xử lý trường hợp AI gửi nhầm.
+- Giới hạn: Không thể hoàn tác yêu cầu đã gửi.
+
+### 3. Quyết định cách hiển thị độ chắc chắn và bằng chứng
+
+- Phương án 1: Hiển thị AI chắc chắn 90% hoặc 100%.
+- Không chọn: Không có cơ sở tính toán tỷ lệ chính xác.
+
+- Phương án 2: Chỉ hiển thị câu trả lời của AI.
+- Không chọn: Khách không biết AI dựa vào thông tin nào.
+
+- Phương án được chọn: Hiển thị "Đã xác minh" hoặc "Chưa xác minh được" kèm dữ liệu đặt chỗ và chính sách.
+- Lý do: Khách có thể kiểm tra căn cứ và biết giới hạn thông tin.
+
+### 4. Quyết định cách điều khiển mức tự chủ
+
+- Phương án 1: AI tự động thực hiện mọi thao tác.
+- Không chọn: Có nguy cơ gửi hoàn vé nhầm, không thể huỷ.
+
+- Phương án 2: Mọi thao tác đều cần nhân viên.
+- Không chọn: Khách phải chờ ngay cả khi chỉ cần tra cứu thông tin.
+
+- Phương án được chọn:
+  - Tự động tra cứu dữ liệu.
+  - Yêu cầu khách xác nhận trước khi gửi hoàn vé.
+  - Chặn thao tác ngoài thẩm quyền.
+  - Chuyển nhân viên khi xảy ra lỗi nghiêm trọng.
+
+- Lý do: Cân bằng tốc độ, an toàn và quyền kiểm soát của người dùng.
+
 
 ## §6. Tốt là gì (chặng 6 — nhẹ, bỏ được nếu thiếu giờ)
 
