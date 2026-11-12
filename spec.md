@@ -56,7 +56,8 @@
 
 ## §3. Khi AI sai  (chặng 3)
 
-## 3.1 Kịch bản — AI tự ý hoàn vé khi khách chưa xác nhận
+## 3.1 trả lời câu hỏi
+## Kịch bản — AI tự ý hoàn vé khi khách chưa xác nhận
 
 - Tin người dùng: "Nếu tôi không bay nữa thì có được hoàn tiền không?"
 - Lớp: ④ Đặc thù domain.
