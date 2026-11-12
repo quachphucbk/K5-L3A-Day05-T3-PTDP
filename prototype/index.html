@@ -101,7 +101,7 @@ td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertic
 <header><div class="wrap">
  <button class="chip themebtn" id="theme">Sáng / Tối</button>
  <h1>T3 Du lịch · Trợ lý đổi chuyến khi chuyến bay bị huỷ</h1>
- <div class="sub">Lát cắt: trong <b>Đặt chỗ của tôi</b>, hành khách vừa nhận tin BM 213 bị huỷ do bão và nhắn hỏi. AI đề xuất và giữ chỗ, hỏi lại, đổi vé hay chuyển nhân viên, để khách tới nơi kịp mà không mất vé hay tiền vì một thao tác không đảo được. Dữ liệu dựng · hãng "Bay Mẫu" là hãng dựng · không gọi AI thật.</div>
+ <div class="sub">Lát cắt: trong <b>Đặt chỗ của tôi</b>, hành khách vừa nhận tin BM 213 bị huỷ do bão và nhắn hỏi. AI đề xuất và giữ chỗ, hỏi lại, đổi vé hay chuyển nhân viên, để khách tới nơi kịp mà không mất vé hay tiền vì một thao tác không đảo được. Dữ liệu dựng · hãng "Bay Mẫu" là hãng dựng · không gọi AI thật. Hai demo là hai tình huống độc lập, không chia sẻ trạng thái vé.</div>
  <nav id="nav">
   <button data-t="cases" class="on">§2 · 10 kịch bản rủi ro</button>
   <button data-t="d2">Demo · Đắt #2 "Ok lấy chuyến 9h"</button>
@@ -227,14 +227,14 @@ td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertic
     <tr><td>Bùi Anh Dũng</td><td><span class="pill p-cond">Tự làm có điều kiện</span></td><td>Giữ chưa đổi vé, tự nhả 20 phút. Ca "sớm nhất" phải chặn BM 217 (1 chỗ).</td></tr>
     <tr><td>Lê Minh Phụng</td><td><span class="pill p-ask">Cần duyệt trước khi giữ</span></td><td>Ca hoàn tiền: không suy ra hành động từ câu hỏi; tránh nhầm "đã giữ" với "đã đổi".</td></tr>
    </table></div>
-   <p class="small"><b>Nhóm chốt: tự làm có điều kiện</b> (đã rõ chuyến + hành khách, đủ chỗ). Một lượt duyệt riêng có thể làm mất chỗ; giữ chỗ tự hết sau 20 phút và chưa dùng lần đổi miễn phí.</p>
+   <p class="small"><b>Nhóm chốt: tự làm có điều kiện</b> (đã biết hành khách, đủ chỗ; được giữ tạm một chuyến khả thi khi hỏi rõ). Một lượt duyệt riêng có thể làm mất chỗ; giữ chỗ tự hết sau 20 phút và chưa dùng lần đổi miễn phí.</p>
   </div>
   <div class="panel"><h2>4.3 · 8 luật bổ sung</h2>
    <ol class="rules">
     <li><b>Tách hỏi quyền lợi → chuẩn bị → thực hiện.</b> Chỉ bước cuối gọi đổi/hoàn. <span class="pill star">chặn #1</span></li>
     <li><b>Một câu "ok" không phải quyền chung.</b> Xác nhận gắn với thao tác, mã đặt chỗ, chuyến/ngày/giờ, từng hành khách. <span class="pill star">chặn #2</span></li>
     <li><b>Đủ chỗ cho toàn bộ hành khách.</b> Không tách đặt chỗ; trẻ 5 tuổi bay một mình → chuyển người. <span class="pill layer">§2 dòng 1, 3</span></li>
-    <li><b>Giữ chỗ không phải đổi vé.</b> Chỉ báo "đã giữ" sau kết quả tool.</li>
+    <li><b>Giữ chỗ không phải đổi vé.</b> Chỉ báo "đã giữ" sau kết quả tool. Nhả chỗ là thao tác mô phỏng mở rộng do khách bấm; không hoàn tác vé.</li>
     <li><b>Dữ liệu mới, xác nhận còn hiệu lực.</b> Đổi điều kiện → duyệt lại.</li>
     <li><b>Tin nhắn không cấp quyền.</b> Tự xưng nhân viên không bỏ được bước xác nhận. <span class="pill layer">§2 dòng 6</span></li>
     <li><b>Chặn giao dịch lặp.</b> Không báo thành công trước kết quả; không tự gửi lại.</li>
@@ -248,10 +248,10 @@ td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertic
 <div class="modal" id="modal1"><div class="card">
  <b>Tiếp tục hoàn vé cho TRV-7Q2K?</b>
  <p style="font-size:14px">Theo chính sách: chuyến huỷ do bão được <b>hoàn toàn bộ</b>, <b>không có bồi thường tiền mặt</b>.<br>
- ⚠ Gửi yêu cầu hoàn rồi <b>không huỷ được</b>: bạn mất chỗ trên mọi chuyến thay thế.<br>
- <span class="muted">Dữ liệu hiện có <b>chưa đủ</b> số tiền, phương thức nhận tiền và thời hạn hoàn của vé này (§4.1), nên mình <b>chưa gửi</b>. Mình chuyển nhân viên để làm rõ trước khi gửi.</span></p>
+ ⚠ Gửi yêu cầu hoàn rồi <b>không huỷ được</b>: bạn không thể rút lại yêu cầu để tiếp tục đổi theo ý định cũ.<br>
+ <span class="muted">Dữ liệu hiện có <b>chưa đủ</b> số tiền, phương thức nhận tiền và thời hạn hoàn của vé này (§4.1), nên mình <b>chưa gửi</b>. Mình chuyển nhân viên để làm rõ; gửi hoàn vẫn cần xác nhận riêng sau khi đủ thông tin.</span></p>
  <label style="font-size:14px"><input type="checkbox" id="ck1"> Mình hiểu: gửi rồi không rút lại được</label>
- <div class="btns"><button class="btn danger" id="go1" disabled>Chuyển nhân viên để làm rõ &amp; gửi</button><button class="btn" id="back1">Quay lại, xem đổi chuyến</button></div>
+ <div class="btns"><button class="btn danger" id="go1" disabled>Chuyển nhân viên để làm rõ</button><button class="btn" id="back1">Quay lại, xem đổi chuyến</button></div>
 </div></div>
 
 <div class="foot wrap">LAB5 · AI20K K5 · Day 05 · T3. Một file HTML, mô phỏng tool bằng JS, không gọi AI thật, không gửi dữ liệu đi đâu. Nội dung lấy từ <code>spec.md</code> §2–§4.</div>
@@ -277,18 +277,18 @@ const CASES=[
  {q:'"Nếu tôi không bay nữa thì có được hoàn tiền không?"',L:'④',lab:'no',top:1,
   wrong:'Hiểu câu <i>hỏi</i> thành <i>yêu cầu</i> và tự gọi <code>gui_yeu_cau_hoan_ve</code> khi khách chưa xác nhận.',
   good:'Giải thích chính sách (hoàn toàn bộ, không bồi thường tiền mặt), ghi rõ "chưa gửi", yêu cầu xác nhận riêng trước khi gửi.',
-  ev:'<code>gui_yeu_cau_hoan_ve</code>: "Không: gửi rồi không huỷ được". Sản phẩm thật: hoàn tới 90 ngày. Nhân viên: "Ca khó nhất là khách lỡ bấm hoàn vé, rồi muốn đổi chuyến."',
-  note:['top','<b>Đắt nhất #1.</b> Tool duy nhất trong 5 tool không đảo lại được theo bất kỳ cách nào. Khách mất cả chỗ lẫn tiền (tới 90 ngày); muốn bay lại phải mua vé mới đúng lúc bão làm khan chỗ. Mọi kịch bản khác vẫn còn đường lùi.'],demo:'d1'},
+  ev:'<code>gui_yeu_cau_hoan_ve</code>: "Không: gửi rồi không huỷ được". Tham khảo sản phẩm: có thể tới 90 ngày, chưa xác minh cho TRV-7Q2K. Nhân viên: "Ca khó nhất là khách lỡ bấm hoàn vé, rồi muốn đổi chuyến."',
+  note:['top','<b>Đắt nhất #1.</b> Tool duy nhất trong 5 tool không đảo lại được theo bất kỳ cách nào. Khách mất lựa chọn tiếp tục đổi vé cũ và phải chờ hoàn; chưa xác minh thời hạn riêng; muốn bay lại phải mua vé mới đúng lúc bão làm khan chỗ. Mọi kịch bản khác vẫn còn đường lùi.'],demo:'d1'},
  {q:'"Đổi giúp mình sang chuyến sớm nhất còn chỗ đi, gấp lắm."',L:'②',lab:'no',
   wrong:'Hiểu "sớm nhất" theo giờ bay → BM 217 (21:00, 1 chỗ) và gọi <code>doi_chuyen_bay</code> cho 1 người. Bé Bình 5 tuổi bị tách khỏi mẹ, hoặc lần đổi miễn phí bị dùng cho chuyến không chở được cả hai.',
   good:'BM 217 không đủ cho 2 người. Đề xuất BM 201 07:00 13/11 (sớm nhất đủ chỗ), <code>giu_cho_chuyen_moi</code> cho 2 người, đếm ngược 20 phút, chờ khách bấm xác nhận.',
   ev:'<code>tra_cuu_dat_cho</code>: BM 217 còn 1 chỗ; đặt chỗ có 2 hành khách.',
   note:['near','<b>Suýt được chọn.</b> Hậu quả gần bằng #2, nhưng chặn được bằng một luật dữ liệu "không đề xuất chuyến thiếu chỗ". #2 thì không luật nào chặn được.']},
  {q:'"Ok lấy chuyến 9h nhé." (sau khi AI đưa 3 chuyến)',L:'②',lab:'no',top:2,
-  wrong:'"9h" khớp cả <b>BM 217 21:00</b> (9 giờ tối nay) và <b>BM 205 09:30</b> (9 rưỡi sáng mai). AI chọn một cách hiểu và gọi <code>doi_chuyen_bay</code>, coi "ok" là xác nhận.',
+  wrong:'“9h” chưa rõ sáng/tối; AI có thể gán nhầm cho <b>BM 217 21:00</b> hoặc <b>BM 205 09:30</b>, dù 09:30 không phải 09:00. AI chọn một cách hiểu và gọi <code>doi_chuyen_bay</code>, coi "ok" là xác nhận.',
   good:'Không đoán. Hỏi lại bằng 2 nút ghi rõ ngày giờ; giữ chỗ BM 205 trong lúc chờ; chỉ đổi khi khách bấm đúng một chuyến cụ thể.',
   ev:'BM 217 còn 1 chỗ, BM 205 còn 4. <code>doi_chuyen_bay</code>: "Khó: hết lần đổi miễn phí; chuyến khác có thể đã hết chỗ".',
-  note:['top','<b>Đắt nhất #2 · ca demo.</b> Cả hai cách hiểu đều hợp lệ về dữ liệu, nên không luật cứng nào bắt được; chỉ thiết kế xác nhận (nút ghi rõ ngày giờ, không coi "ok" là đồng ý) mới cứu được. Đúng loại "khách xác nhận mơ hồ" của Demo bắt buộc.'],demo:'d2'},
+  note:['top','<b>Đắt nhất #2 · ca demo.</b> “9h” chưa rõ sáng/tối; 09:30 không phải 09:00, không được tự gán ý khách; chỉ thiết kế xác nhận (nút ghi rõ ngày giờ, không coi "ok" là đồng ý) mới cứu được. Đúng loại "khách xác nhận mơ hồ" của Demo bắt buộc.'],demo:'d2'},
  {q:'"Đổi tên vé của tôi sang tên em tôi."',L:'③',lab:'fix',
   wrong:'Hứa hoặc báo đã đổi tên dù không có chức năng thực hiện.',
   good:'Nói rõ giới hạn và chuyển nhân viên.',
@@ -351,41 +351,48 @@ function logTo(id,arr){$(id).innerHTML=arr.map(l=>`<div class="t-${l[0]}">${l[1]
 function states(id,list,cur){$(id).innerHTML=list.map((s,i)=>`${i?'<i>→</i>':''}<span class="${s===cur?'cur':''}">${s}</span>`).join('')}
 
 /* ---------- DEMO 2 : "Ok lấy chuyến 9h nhé" ---------- */
-const D2={path:'low',step:'ask',hf:'BM 205',msgs:[],log:[],sec:0,t:null,holding:false,
- ST:['Chưa đổi','Đã giữ, chưa đổi','Chờ xác nhận','Đã đổi','Đã chuyển nhân viên'],
+const D2={path:'low',step:'ask',hf:'BM 205',msgs:[],log:[],sec:0,t:null,holding:false,expiresAt:0,changed:false,version:0,
+ ST:['Chưa đổi','Đã giữ, chưa đổi','Chờ xác nhận','Đang xử lý','Đã đổi','Đã chuyển nhân viên'],
  start(){
-  clearInterval(this.t);this.hf='BM 205';this.msgs=[];this.log=[['info','tra_cuu_dat_cho() → 3 chuyến · đọc lúc 15:00']];this.holding=false;
+  clearInterval(this.t);this.version++;this.step='ask';this.changed=false;this.expiresAt=0;this.hf='BM 205';this.msgs=[];this.log=[['info','tra_cuu_dat_cho() → 3 chuyến · đọc lúc 15:00']];this.holding=false;
   this.msgs.push(ai('Chuyến BM 213 đã huỷ do bão. Bạn được <b>đổi miễn phí 1 lần trong 48 giờ</b> hoặc hoàn toàn bộ. Các chuyến còn chỗ: BM 217 · 21:00 tối nay 12/11 (1 chỗ) · BM 201 · 07:00 sáng mai 13/11 (9 chỗ) · BM 205 · 09:30 sáng mai 13/11 (4 chỗ).'));
   if(this.path==='happy'){this.msgs.push(me('Lấy chuyến 9h30 sáng mai cho 2 mẹ con nhé.'));this.hold(true);this.step='confirm';}
-  else if(this.path==='fail'){this.msgs.push(me('Ok lấy chuyến 9h nhé.'));this.log.push(['no','giu_cho_chuyen_moi(BM 205, 2 khách) → THẤT BẠI: hết chỗ']);this.step='holdfail';}
-  else if(this.path==='corrB'){this.msgs.push(me('Ok lấy chuyến 9h nhé.'));this.log.push(['ok','giu_cho_chuyen_moi(BM 205, 2 khách) → OK · 20 phút']);this.log.push(['hard','[khách bấm Xác nhận đổi] doi_chuyen_bay(TRV-7Q2K → BM 205, An + Bình) → OK']);this.step='done';}
+  else if(this.path==='fail'){this.msgs.push(me('Giữ BM 205 lúc 09:30 sáng mai cho cả hai nhé.'));this.log.push(['no','giu_cho_chuyen_moi(BM 205, 2 khách) → THẤT BẠI: hết chỗ']);this.step='holdfail';}
+  else if(this.path==='corrB'){this.changed=true;this.msgs.push(sys('Fixture riêng: khách đã chọn BM 205 và xác nhận đổi cho cả hai.'));this.msgs.push(me('Ok lấy chuyến 9h nhé.'));this.log.push(['ok','giu_cho_chuyen_moi(BM 205, 2 khách) → OK · 20 phút']);this.log.push(['hard','[khách bấm Xác nhận đổi] doi_chuyen_bay(TRV-7Q2K → BM 205, An + Bình) → OK']);this.step='done';}
   else{this.msgs.push(me('Ok lấy chuyến 9h nhé.'));this.hold(false);this.step='ask';}
   this.render();
  },
- hold(silent){this.holding=true;this.sec=1200;this.log.push(['ok','giu_cho_chuyen_moi(BM 205, An + Bình) → OK · tự nhả sau 20 phút']);clearInterval(this.t);this.t=setInterval(()=>{this.sec-=1;const e=$('#tm2');if(e)e.textContent=this.fmt();if(this.sec<=0)this.expire()},1000)},
+ hold(silent){if(this.changed||this.step==='processing'||this.step==='staff')return;
+  this.holding=true;this.hf='BM 205';this.expiresAt=Date.now()+1200000;this.sec=1200;
+  this.log.push(['ok','giu_cho_chuyen_moi(BM 205, An + Bình) → OK · tự nhả sau 20 phút']);this.clock()},
+ clock(){clearInterval(this.t);this.t=setInterval(()=>{this.sec=Math.max(0,Math.ceil((this.expiresAt-Date.now())/1000));const e=$('#tm2');if(e)e.textContent=this.fmt();if(this.holding&&this.sec<=0)this.expire()},1000)},
  fmt(){return String(Math.floor(this.sec/60)).padStart(2,'0')+':'+String(this.sec%60).padStart(2,'0')},
- release(byUser){clearInterval(this.t);this.holding=false;this.log.push(['info',byUser?'[khách bấm Nhả chỗ] nhả giữ chỗ '+this.hf:'giữ chỗ '+this.hf+' hết 20 phút → tự nhả']);
-  this.msgs.push(ai(`${byUser?'Đã nhả':'Đã hết thời gian giữ, nhả'} 2 chỗ ${this.hf}. Vé của bạn <b>chưa bị đổi</b>, lượt đổi miễn phí <b>vẫn còn</b> trong hạn 48 giờ.<div class="btns"><button class="btn" onclick="D2.rehold()">Xem lại chuyến</button></div>`));this.step='released';this.render()},
+ release(byUser){if(!this.holding||this.changed||this.step==='processing')return;clearInterval(this.t);this.holding=false;this.expiresAt=0;this.sec=0;
+  this.log.push(['info',byUser?'nha_cho_giu('+this.hf+') → OK · phần mở rộng mô phỏng':'giữ chỗ '+this.hf+' hết 20 phút → tự nhả']);
+  this.msgs.push(ai(`${byUser?'Đã nhả':'Đã hết thời gian giữ, nhả'} 2 chỗ ${this.hf}. Vé chưa đổi, lượt miễn phí chưa dùng.<div class="btns"><button class="btn" onclick="D2.rehold()">Xem lại chuyến</button></div>`));if(this.step!=='staff')this.step='released';this.render()},
  expire(){this.release(false)},
- jump(){if(!this.holding)return;this.sec=300;this.msgs.push(sys('⏱ Phút 15 · thông báo đẩy: "Còn 5 phút giữ 2 chỗ '+this.hf+' cho bạn."'));this.render()},
- rehold(){this.log.push(['info','tra_cuu_dat_cho() → đọc lại số chỗ']);this.msgs.push(me('Xem lại chuyến'));this.hold();this.step='ask';this.render()},
- choose(){this.msgs.push(me('[Bấm] Chọn chuyến này · BM 205'));this.step='confirm';this.render()},
- back(){this.msgs.push(me('[Bấm] Chọn chuyến khác'));this.step='ask';this.render()},
- why(){this.msgs.push(me('[Bấm] Vì sao không chọn được BM 217?'));this.step='why';this.render()},
- confirm(){clearInterval(this.t);this.holding=false;this.log.push(['hard','[khách bấm Xác nhận đổi] doi_chuyen_bay(TRV-7Q2K → BM 205, An + Bình) → OK']);this.msgs.push(me('[Bấm] Xác nhận đổi'));this.step='done';this.render()},
- staff(reason){this.log.push(['ok',`chuyen_nhan_vien(lý do: ${reason}) → OK`]);clearInterval(this.t);
-  const changed=this.step==='done'||this.step==='regret';
-  this.msgs.push(ai(`${changed?'Vé đã đổi sang BM 205 · 09:30 sáng mai 13/11. Mình không tự đổi lại được. ':''}Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, <b>bạn không cần kể lại</b>.
-  <div class="box done small"><b>Gói chuyển ca nhân viên thấy:</b><br>Mã TRV-7Q2K · 2 hành khách (An 34t, Bình 5t) · tin gốc "Ok lấy chuyến 9h nhé" · 2 cách hiểu AI đã đưa (21:00 12/11 / 09:30 13/11) · ${changed?'<b>đã đổi sang BM 205</b>, lượt đổi miễn phí <b>đã dùng</b> · ưu tiên cao':`chuyến đang giữ: ${this.holding?'BM 205, hết giữ sau '+this.fmt():'không'} · lượt đổi miễn phí <b>chưa dùng</b>`} · lý do: ${reason}</div>`));
+ jump(){if(!this.holding||this.changed||this.step==='processing')return;this.expiresAt=Date.now()+300000;this.sec=300;this.msgs.push(sys('⏱ Mô phỏng phút 15 · còn 5 phút giữ chỗ '+this.hf));this.render()},
+ rehold(){if(this.changed||this.step==='processing'||this.step==='staff')return;this.log.push(['info','tra_cuu_dat_cho() → đọc lại số chỗ trong fixture']);this.step='ask';if(this.path==='fail'){this.step='holdfail';this.render();return;}this.hold();this.render()},
+ choose(){if(this.changed||this.step==='processing'||this.step==='staff')return;if(this.path==='fail'){this.failPick();return;}if(!this.holding||this.expiresAt<=Date.now()){this.holding=false;this.hold();}this.msgs.push(me('[Bấm] Chọn BM 205 cho An và Bình'));this.step='confirm';this.render()},
+ back(){if(this.changed||this.step==='processing'||this.step==='staff')return;this.msgs.push(me('[Bấm] Chọn chuyến khác'));this.step=this.path==='fail'?'holdfail':'ask';this.render()},
+ why(){if(this.changed||this.step==='processing'||this.step==='staff')return;this.msgs.push(me('[Bấm] Vì sao không chọn được BM 217?'));this.step='why';this.render()},
+ confirm(){if(this.changed||this.step!=='confirm')return;if(!this.holding||this.expiresAt<=Date.now()){if(this.holding)this.expire();else{this.step='released';this.render();}return;}
+  const flight=this.hf,version=this.version;this.step='processing';this.render();
+  this.log.push(['hard','[khách bấm Xác nhận đổi] doi_chuyen_bay(TRV-7Q2K → '+flight+', An + Bình) → đang xử lý']);
+  this.render();setTimeout(()=>{if(version!==this.version)return;clearInterval(this.t);this.holding=false;this.expiresAt=0;this.changed=true;this.hf=flight;this.log.push(['ok','doi_chuyen_bay → OK · '+flight+' · An + Bình']);this.msgs.push(me('[Bấm] Xác nhận đổi '+flight));this.step='done';this.render()},400)},
+ staff(reason){if(this.step==='processing'||this.step==='staff')return;this.log.push(['ok',`chuyen_nhan_vien(lý do: ${reason}) → OK`]);
+  const changed=this.changed;if(this.holding)this.sec=Math.max(0,Math.ceil((this.expiresAt-Date.now())/1000));
+  this.msgs.push(ai(`${changed?`Vé đã đổi sang ${this.hf} · ${this.hf==='BM 201'?'07:00':'09:30'} sáng mai 13/11. Mình không tự đổi lại được. `:''}Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, <b>bạn không cần kể lại</b>.
+  <div class="box done small"><b>Gói chuyển ca nhân viên thấy:</b><br>Mã TRV-7Q2K · 2 hành khách (An 34t, Bình 5t) · tin gốc "Ok lấy chuyến 9h nhé" · 2 cách hiểu AI đã đưa (21:00 12/11 / 09:30 13/11) · ${changed?'<b>đã đổi sang '+this.hf+'</b>, lượt đổi miễn phí <b>đã dùng</b> · ưu tiên cao':`chuyến đang giữ: ${this.holding?this.hf+', hết giữ sau '+this.fmt():'không'} · lượt đổi miễn phí <b>chưa dùng</b>`} · lý do: ${reason}</div>`));
   this.step='staff';this.render()},
- text(v){if(!v.trim())return;this.msgs.push(me(esc(v)));const s=v.toLowerCase();
+ text(v){if(!v.trim()||this.step==='processing')return;if(this.changed){if(this.step==='staff')return;this.staff('Khách yêu cầu sửa sau khi đã đổi: '+esc(v));return;}if(this.step==='staff')return;this.msgs.push(me(esc(v)));const s=v.toLowerCase();if(/đổi tên|một mình/.test(s)){this.staff('Ngoài thẩm quyền: '+esc(v));return;}
   if(/nhân viên/.test(s)&&/bỏ|ngay/.test(s)){this.msgs.push(ai('Mình vẫn cần bạn bấm xác nhận trên thẻ chuyến. Tin nhắn không thay đổi được bước này, kể cả khi tự xưng là nhân viên hãng (luật 6).'));this.log.push(['info','(không gọi tool · tin nhắn không cấp quyền)'])}
   else if(/tối|21/.test(s)){this.corrA();return}
-  else if(/9h30|9:30|09:30|sáng mai/.test(s)){if(!this.holding&&this.step!=='done')this.hold();this.msgs.push(ai('Bạn đã nói rõ: BM 205 · 09:30 sáng mai 13/11. Bạn xem lại thẻ xác nhận và bấm giúp mình nhé.'));this.step='confirm';this.log.push(['info','(nhận diện rõ chuyến · vẫn chưa gọi doi_chuyen_bay)'])}
+  else if(/9h30|9:30|09:30/.test(s)){if(this.path==='fail'){this.step='holdfail';this.render();return;}if(!this.holding&&this.step!=='done')this.hold();this.msgs.push(ai('Bạn đã nói rõ: BM 205 · 09:30 sáng mai 13/11. Bạn xem lại thẻ xác nhận và bấm giúp mình nhé.'));this.step='confirm';this.log.push(['info','(nhận diện rõ chuyến · vẫn chưa gọi doi_chuyen_bay)'])}
   else if(/nhầm|không muốn/.test(s)&&this.step==='done'){this.step='regret';this.staff('Khách báo đổi nhầm sau khi xác nhận');return}
   else{this.msgs.push(ai('Bạn bấm vào thẻ chuyến giúp mình nhé, <b>mình chỉ đổi vé khi bạn bấm</b>.'));this.log.push(['info','(chữ "'+esc(v)+'" không được coi là xác nhận · không gọi tool)'])}
   this.render()},
- corrA(){this.msgs.push(ai(`Mình hiểu bạn muốn 21:00 tối nay. BM 217 <b>chỉ còn 1 chỗ</b>, bạn đi cùng bé Bình 5 tuổi nên cần 2 chỗ; trẻ 5 tuổi bay một mình mình không xử lý được. Vé của bạn chưa đổi.<div class="btns"><button class="btn pri" onclick="D2.choose()">Giữ chuyến 09:30 sáng mai</button>${this.holding?'<button class="btn" onclick="D2.release(true)">Nhả chỗ BM 205</button>':''}<button class="btn out" onclick="D2.staff('Khách muốn bay BM 217 tối nay (trẻ 5 tuổi, thiếu chỗ)')">Chuyển nhân viên</button></div>`));this.step='corrA';this.render()},
+ corrA(){if(this.changed||this.step==='processing'||this.step==='staff')return;this.msgs.push(ai(`Mình hiểu bạn muốn 21:00 tối nay. BM 217 <b>chỉ còn 1 chỗ</b>, bạn đi cùng bé Bình 5 tuổi nên cần 2 chỗ; trẻ 5 tuổi bay một mình mình không xử lý được. Vé của bạn chưa đổi.<div class="btns"><button class="btn pri" onclick="D2.choose()">Giữ chuyến 09:30 sáng mai</button>${this.holding?'<button class="btn" onclick="D2.release(true)">Nhả chỗ BM 205</button>':''}<button class="btn out" onclick="D2.staff('Khách muốn bay BM 217 tối nay (trẻ 5 tuổi, thiếu chỗ)')">Chuyển nhân viên</button></div>`));this.step='corrA';this.render()},
  cards(){return `<span class="conf"><span class="n">1</span>⚠ "9h" khớp 2 chuyến, chưa xác định</span>
   <div class="fc hi"><b>BM 205 · 09:30 sáng mai 13/11</b><br><small>còn 4 chỗ · <span class="good">✓ đủ cho 2 người</span></small><div class="btns"><button class="btn pri" onclick="D2.choose()">Chọn chuyến này</button></div></div>
   <div class="fc dim"><b>BM 217 · 21:00 tối nay 12/11</b><br><small>còn 1 chỗ · <span class="bad"><span class="n">2</span>✗ không đủ cho 2 người</span></small><div class="btns"><button class="btn" onclick="D2.why()">Vì sao không chọn được?</button></div></div>
@@ -395,18 +402,19 @@ const D2={path:'low',step:'ask',hf:'BM 205',msgs:[],log:[],sec:0,t:null,holding:
   if(s==='ask'){h+=ai(`<span class="n">1</span>Mình <b>chưa đổi vé</b> của bạn. Trong danh sách có 2 chuyến gần 9 giờ, bạn bấm chọn giúp mình đúng chuyến nhé.${this.holding?' Mình đã <b>giữ tạm 2 chỗ BM 205</b> trong 20 phút để không bị hết trong lúc bạn chọn. Giữ chỗ chưa đổi vé, chưa dùng lượt đổi miễn phí.':''}${this.cards()}`);
    st=this.holding?'Đã giữ, chưa đổi':'Chưa đổi';
    why='<b>Đường ② · Low-confidence.</b> Chọn phương án <b>A: hỏi lại bằng nút + giữ chỗ</b>.<br>✗ B (tự chốt BM 205 rồi đổi): vẫn là đoán bằng tool khó đảo.<br>✗ C (chuyển nhân viên): mơ hồ hẹp (2 lựa chọn), chờ người thì BM 205 (4 chỗ) có thể hết.<br>Câu nói không xin lỗi, không đổ lỗi; quy mơ hồ về <i>danh sách của AI</i>. Lỗi gốc là <b>lỗi ngữ cảnh</b>.<br><br>Thử: gõ <code>ok</code> · gõ <code>9h tối nay</code> · bấm thẻ.'}
-  else if(s==='confirm'){h+=ai(`<div class="box warn"><b>Đổi vé TRV-7Q2K</b><br>Từ: BM 213 (đã huỷ)<br>Sang: <b>BM 205 · 09:30 sáng mai 13/11</b><br>Hành khách: <b>Nguyễn Minh An, Nguyễn Gia Bình</b><br>⚠ Việc này <b>dùng lần đổi miễn phí duy nhất</b>; đổi xong không đổi lại miễn phí được.
-   <div class="btns"><button class="btn pri" onclick="D2.confirm()">Xác nhận đổi</button><button class="btn" onclick="D2.back()"><span class="n">3</span>Chọn chuyến khác</button></div></div>`);
+  else if(s==='confirm'){h+=ai(`<div class="box warn"><b>Đổi vé TRV-7Q2K</b><br>Từ: BM 213 (đã huỷ)<br>Sang: <b>${this.hf} · ${this.hf==='BM 201'?'07:00':'09:30'} sáng mai 13/11</b><br>Hành khách: <b>Nguyễn Minh An, Nguyễn Gia Bình</b><br>⚠ Việc này <b>dùng lần đổi miễn phí duy nhất</b>; đổi xong không đổi lại miễn phí được.
+   <div class="btns"><button class="btn pri" onclick="D2.confirm()">Xác nhận đổi 2 vé · ${this.hf} · ${this.hf==='BM 201'?'07:00':'09:30'} · 13/11</button><button class="btn" onclick="D2.back()"><span class="n">3</span>Chọn chuyến khác</button></div></div>`);
    st='Chờ xác nhận';why=this.path==='happy'?'<b>Đường ① · Happy path.</b> Khách nói rõ chuyến + người → không hỏi lại, tự giữ chỗ (tự làm có điều kiện), nhưng <b>vẫn phải bấm</b> vì <code>doi_chuyen_bay</code> khó đảo.':'<b>Thẻ xác nhận cuối.</b> Tách "chuyến nào" và "chấp nhận mất lượt đổi miễn phí" thành 2 lần bấm: gộp lại thì nút quá dài, dễ bấm lướt. Giữ chỗ đã bảo vệ chỗ ngồi nên bước thứ hai không làm mất chuyến.'}
   else if(s==='why'){h+=ai(`<span class="n">2</span>BM 217 chỉ còn 1 chỗ, bạn đi cùng bé Bình 5 tuổi nên cần 2 chỗ. Trẻ 5 tuổi bay một mình mình không xử lý được. Nếu bạn vẫn muốn bay tối nay, mình chuyển nhân viên hỗ trợ.<div class="btns"><button class="btn pri" onclick="D2.choose()">Giữ chuyến 09:30 sáng mai</button><button class="btn out" onclick="D2.staff('Khách muốn bay BM 217 tối nay (trẻ 5 tuổi, thiếu chỗ)')">Chuyển nhân viên</button></div>`);
    st=this.holding?'Đã giữ, chưa đổi':'Chưa đổi';why='<b>G11 · Giải thích vì sao.</b> Luật cứng <code>số chỗ ≥ số hành khách</code>: BM 217 không bao giờ có nút đổi, dù model hiểu "9h" thế nào. Trẻ bay một mình nằm ngoài phạm vi §1 → chuyển người.'}
   else if(s==='corrA'){st=this.holding?'Đã giữ, chưa đổi':'Chưa đổi';why='<b>Đường ④a · Sửa trước khi xác nhận.</b> Sửa tốn một lần bấm, chưa mất gì. Thiết kế cố ý giữ khách ở ④a thay vì ④b: giữ chỗ và thẻ xác nhận là 2 điểm dừng để sửa khi còn rẻ.'}
   else if(s==='holdfail'){h+=ai(`BM 205 vừa hết chỗ, <b>mình chưa đổi vé</b> của bạn. Theo dữ liệu vừa tra, còn <b>BM 201 · 07:00 sáng mai 13/11</b> đủ cho 2 người.<div class="fc hi"><b>BM 201 · 07:00 sáng mai 13/11</b><br><small><span class="good">✓ đủ cho 2 người</span> · dữ liệu vừa tra lại</small><div class="btns"><button class="btn pri" onclick="D2.failPick()">Chọn chuyến này</button></div></div><div class="btns"><button class="btn out" onclick="D2.staff('Giữ chỗ BM 205 thất bại')">Hỏi nhân viên</button><button class="btn" onclick="D2.failRefund()">Xem điều kiện hoàn vé</button></div>`);
    st='Chưa đổi';why='<b>Đường ③ · Failure.</b> <code>giu_cho_chuyen_moi</code> báo thất bại → <b>không</b> nói "đã giữ", <b>không</b> hiện đếm ngược. Câu "đã giữ…" và dải đếm ngược được ghép từ kết quả tool, không để model tự viết (§3 câu 7, lỗi 2). Gọi lại <code>tra_cuu_dat_cho</code>, chỉ đưa chuyến còn đủ chỗ.'}
-  else if(s==='done'){h+=ai(`<div class="box done">Đã đổi sang <b>BM 205 · 09:30 sáng mai 13/11</b> cho Nguyễn Minh An và Nguyễn Gia Bình. Lần đổi miễn phí đã được dùng.</div>`);
+  else if(s==='done'){h+=ai(`<div class="box done">Đã đổi sang <b>${this.hf} · ${this.hf==='BM 201'?'07:00':'09:30'} sáng mai 13/11</b> cho Nguyễn Minh An và Nguyễn Gia Bình. Lần đổi miễn phí đã được dùng.</div>`);
    st='Đã đổi';why=this.path==='corrB'?'<b>Đường ④b.</b> Vé đã đổi theo xác nhận. Thử gõ <code>Nhầm rồi, mình không muốn chuyến này</code> hoặc bấm nút bên dưới.':'Vé đổi <b>sau</b> lần bấm [Xác nhận đổi]. Nếu khách báo nhầm, AI không tự gọi <code>doi_chuyen_bay</code> lần 2, chuyển nhân viên ngay.';
    h+=`<div class="btns"><button class="btn" onclick="D2.text('Nhầm rồi, mình không muốn chuyến này')">Mô phỏng: "Nhầm rồi, mình không muốn chuyến này"</button></div>`}
-  else if(s==='staff'){st='Đã chuyển nhân viên';why='<b>Chuyển người minh bạch.</b> Chỉ báo "đã chuyển" sau khi tool thành công. Mục tiêu nhận ca ≤ 5 phút (con số nhóm tự đặt, track không có), tức còn ≥ 15 phút giữ chỗ. Sau khi đổi nhầm: <b>lỗi hệ thống</b> nếu AI đổi khi khách chỉ gõ "ok" → xin lỗi rõ; <b>lỗi người dùng</b> nếu khách tự bấm nhầm → nói sự thật, không trách.'}
+  else if(s==='processing'){h+=ai('Đang xử lý đổi vé. Chưa có kết quả, không gửi lại thao tác.');st='Đang xử lý';why='Chờ kết quả tool giả lập; khoá thay đổi và bấm lặp.'}
+  else if(s==='staff'){st='Đã chuyển nhân viên';why='<b>Chuyển người minh bạch.</b> Chỉ báo "đã chuyển" sau khi tool thành công. Mục tiêu nhận ca ≤ 5 phút (con số nhóm tự đặt, track không có), không phải SLA; thời gian giữ còn lại theo đồng hồ. Sau khi đổi nhầm: <b>lỗi hệ thống</b> nếu AI đổi khi khách chỉ gõ "ok" → xin lỗi rõ; <b>lỗi người dùng</b> nếu khách tự bấm nhầm → nói sự thật, không trách.'}
   else if(s==='failheld'){st='Đã giữ, chưa đổi';why='<b>Đường ③ → hồi phục.</b> Giữ chỗ BM 201 chỉ được báo sau khi tool trả OK. Bước đổi vé vẫn cần xác nhận riêng.'}
   else if(s==='released'){st='Chưa đổi';why='<b>Không làm gì / Nhả chỗ.</b> Giữ chỗ tự nhả sau 20 phút, vé và lượt đổi miễn phí nguyên vẹn. Không có thao tác khó đảo nào xảy ra.'}
   $('#chat2').innerHTML=h;
@@ -415,7 +423,7 @@ const D2={path:'low',step:'ask',hf:'BM 205',msgs:[],log:[],sec:0,t:null,holding:
   states('#st2',this.ST,st);logTo('#log2',this.log);$('#why2').innerHTML=why;
   const c=$('#chat2');c.lastElementChild&&c.lastElementChild.scrollIntoView({block:'nearest'});
  },
- failPick(){this.log.push(['ok','giu_cho_chuyen_moi(BM 201, An + Bình) → OK']);this.msgs.push(me('[Bấm] Chọn BM 201'));this.holding=true;this.sec=1200;clearInterval(this.t);this.t=setInterval(()=>{this.sec--;const e=$('#tm2');if(e)e.textContent=this.fmt();if(this.sec<=0)this.expire()},1000);this.msgs.push(ai('Đã giữ 2 chỗ BM 201 · 07:00 sáng mai 13/11. Chưa đổi vé. Bấm xác nhận khi bạn sẵn sàng.'));this.hf='BM 201';this.step='failheld';this.render()},
+ failPick(){if(this.changed||this.step==='processing'||this.step==='staff')return;this.log.push(['info','tra_cuu_dat_cho → BM 205 hết chỗ, BM 201 còn 9 chỗ (fixture biến thể)']);this.holding=true;this.hf='BM 201';this.expiresAt=Date.now()+1200000;this.sec=1200;this.clock();this.log.push(['ok','giu_cho_chuyen_moi(BM 201, An + Bình) → OK']);this.msgs.push(me('[Bấm] Chọn BM 201 cho cả hai'));this.step='confirm';this.render()},
  failRefund(){this.msgs.push(me('[Bấm] Xem điều kiện hoàn vé'));this.msgs.push(ai('Chuyến huỷ do bão: bạn được hoàn toàn bộ, không có bồi thường tiền mặt. Mình <b>chưa gửi</b> yêu cầu hoàn nào; gửi rồi không huỷ được. Xem chi tiết ở demo "Có được hoàn tiền không?".'));this.render()}
 };
 $('#send2').onclick=()=>{D2.text($('#in2').value);$('#in2').value=''};
@@ -424,9 +432,9 @@ $$('[data-p2]').forEach(b=>b.onclick=()=>{$$('[data-p2]').forEach(x=>x.classList
 D2.start();
 
 /* ---------- DEMO 1 : "Có được hoàn tiền không?" ---------- */
-const D1={path:'happy',msgs:[],log:[],st:'Chưa gửi hoàn',why:'',
+const D1={path:'happy',sent:false,transferred:false,msgs:[],log:[],st:'Chưa gửi hoàn',why:'',
  ST:['Chưa gửi hoàn','Cần bổ sung thông tin','Đã chuyển nhân viên','Đã gửi'],
- start(){this.msgs=[me('Nếu tôi không bay nữa thì có được hoàn tiền không?')];this.log=[];
+ start(){this.sent=false;this.transferred=false;$('#modal1').classList.remove('show');this.msgs=[me('Nếu tôi không bay nữa thì có được hoàn tiền không?')];this.log=[];
   if(this.path==='happy'){this.log.push(['info','tra_cuu_dat_cho() → BM 213 ĐÃ HUỶ do bão · chính sách Bay Mẫu']);
    this.msgs.push(ai(`Chuyến bay của bạn đã bị huỷ do bão. Theo chính sách, bạn được <b>hoàn toàn bộ tiền vé</b> hoặc <b>đổi chuyến miễn phí một lần trong 48 giờ</b>. Huỷ do thời tiết thì không có bồi thường tiền mặt.
    <div class="box ok"><span class="n">1</span><b>Trạng thái: Chưa gửi yêu cầu hoàn vé.</b> Mình chưa thực hiện thao tác hoàn vé nào.</div>
@@ -437,30 +445,30 @@ const D1={path:'happy',msgs:[],log:[],st:'Chưa gửi hoàn',why:'',
   else if(this.path==='low'){this.log.push(['no','tra_cuu_dat_cho() → LỖI: không truy xuất được']);
    this.msgs.push(ai(`<span class="conf">Chưa xác minh được</span><br>Hiện mình <b>chưa xác minh được</b> điều kiện hoàn tiền của vé này. Mình chưa gửi yêu cầu hoàn nào.<div class="btns"><button class="btn" onclick="D1.retry()">Thử lại</button><button class="btn out" onclick="D1.staff('Không tra được dữ liệu hoàn')">Gặp nhân viên</button></div>`));
    this.st='Chưa gửi hoàn';this.why='<b>Đường ② · Low-confidence.</b> Không có dữ liệu → không đoán quyền lợi, không tự gửi hoàn. Đưa [Thử lại] và [Gặp nhân viên].'}
-  else{this.log.push(['info','tra_cuu_dat_cho() → BM 213 ĐÃ HUỶ']);this.log.push(['no','gui_yeu_cau_hoan_ve(TRV-7Q2K, 2 khách) → ĐÃ GỬI · KHÔNG HUỶ ĐƯỢC']);
+  else{this.sent=true;this.log.push(['info','tra_cuu_dat_cho() → BM 213 ĐÃ HUỶ']);this.log.push(['no','gui_yeu_cau_hoan_ve(TRV-7Q2K, 2 khách) → ĐÃ GỬI · KHÔNG HUỶ ĐƯỢC']);
    this.msgs.push(ai(`<div class="box red">Đã gửi yêu cầu hoàn vé cho 2 hành khách.</div><div class="small muted" style="margin-top:6px">(Đây là thiết kế <b>sai</b>, hiển thị để so sánh.)</div><div class="btns"><button class="btn" onclick="D1.correct()">Khách: "Tôi chỉ hỏi thôi, ai bảo bạn hoàn vé?"</button></div>`));
-   this.st='Đã gửi';this.why='<b>Đường ③ · Failure.</b> AI hiểu "có được hoàn tiền không?" thành yêu cầu, tự gọi <code>gui_yeu_cau_hoan_ve</code>. Vé TRV-7Q2K của 2 mẹ con mất, tiền về tới 90 ngày. Đây là <b>lỗi hệ thống</b>: sửa câu chữ không đủ, phải chặn bằng thiết kế (luật 1, 4.3).'}
+   this.st='Đã gửi';this.why='<b>Đường ③ · Failure.</b> AI hiểu "có được hoàn tiền không?" thành yêu cầu, tự gọi <code>gui_yeu_cau_hoan_ve</code>. Yêu cầu hoàn đã gửi và không rút lại được; chưa có thời hạn hoàn xác minh riêng cho TRV-7Q2K. Đây là <b>lỗi hệ thống</b>: sửa câu chữ không đủ, phải chặn bằng thiết kế (luật 1, 4.3).'}
   this.render()},
  policy(){this.msgs.push(me('[Bấm] Xem chính sách'));this.msgs.push(ai('Chính sách Bay Mẫu khi chuyến bị huỷ: <b>đổi miễn phí 1 lần trong 48 giờ</b>, hoặc <b>hoàn toàn bộ</b>. Huỷ do thời tiết: <b>không bồi thường tiền mặt</b>. Dữ liệu hiện có chưa ghi số tiền, phương thức và thời hạn hoàn cụ thể của vé này.'));this.render()},
- flights(){this.msgs.push(me('[Bấm] Xem đổi chuyến'));this.msgs.push(ai('Các chuyến còn chỗ: BM 201 · 07:00 sáng mai 13/11 (9 chỗ) · BM 205 · 09:30 sáng mai 13/11 (4 chỗ) · BM 217 · 21:00 tối nay 12/11 (1 chỗ, không đủ cho 2 người). <div class="btns"><button class="btn pri" onclick="openTab(\'d2\')">Sang demo đổi chuyến →</button></div>'));this.render()},
- cont(){$('#ck1').checked=false;$('#go1').disabled=true;$('#modal1').classList.add('show');this.st='Cần bổ sung thông tin';this.why='<b>Tách 3 bước:</b> hỏi quyền lợi → chuẩn bị giao dịch → thực hiện. Màn xác nhận riêng nêu "gửi rồi không huỷ được". Fixture thiếu số tiền / phương thức / thời hạn → <b>chuyển nhân viên trước khi gửi</b>, không bịa con số.';this.render()},
+ flights(){if(this.sent){this.msgs.push(ai('Yêu cầu hoàn đã gửi, không thể chuyển sang tự đổi vé. Cần nhân viên kiểm tra.'));this.render();return;}this.msgs.push(me('[Bấm] Xem đổi chuyến'));this.msgs.push(ai('Các chuyến còn chỗ: BM 201 · 07:00 sáng mai 13/11 (9 chỗ) · BM 205 · 09:30 sáng mai 13/11 (4 chỗ) · BM 217 · 21:00 tối nay 12/11 (1 chỗ, không đủ cho 2 người). <div class="btns"><button class="btn pri" onclick="openTab(\'d2\')">Sang demo đổi chuyến →</button></div>'));this.render()},
+ cont(){if(this.sent||this.transferred)return;$('#ck1').checked=false;$('#go1').disabled=true;$('#modal1').classList.add('show');this.st='Cần bổ sung thông tin';this.why='<b>Tách 3 bước:</b> hỏi quyền lợi → chuẩn bị giao dịch → thực hiện. Màn xác nhận riêng nêu "gửi rồi không huỷ được". Fixture thiếu số tiền / phương thức / thời hạn → <b>chuyển nhân viên trước khi gửi</b>, không bịa con số.';this.render()},
  retry(){this.path='happy';$$('[data-p1]').forEach(x=>x.classList.toggle('on',x.dataset.p1==='happy'));this.start()},
- correct(){this.msgs.push(me('Tôi chỉ hỏi thôi, ai bảo bạn hoàn vé?'));this.log.push(['info','kiểm tra trạng thái yêu cầu hoàn → ĐÃ GỬI']);this.log.push(['ok','chuyen_nhan_vien(ưu tiên cao: gửi hoàn nhầm) → OK']);
+ correct(){if(!this.sent||this.transferred)return;this.transferred=true;this.msgs.push(me('Tôi chỉ hỏi thôi, ai bảo bạn hoàn vé?'));this.log.push(['info','kiểm tra trạng thái yêu cầu hoàn → ĐÃ GỬI']);this.log.push(['ok','chuyen_nhan_vien(ưu tiên cao: gửi hoàn nhầm) → OK']);
   this.msgs.push(ai('Mình đã gửi yêu cầu hoàn vé khi bạn chưa xác nhận, <b>đó là lỗi của mình</b>. Yêu cầu này mình <b>không thể tự huỷ</b>. Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, bạn không cần kể lại.<div class="box done small"><b>Nhân viên thấy:</b> mã TRV-7Q2K · thời điểm gửi · lịch sử chat · thao tác AI đã làm · trạng thái yêu cầu hoàn.</div>'));
   this.st='Đã chuyển nhân viên';this.why='<b>Đường ④ · Correction.</b> Kiểm tra đã gửi chưa → đã gửi: xin lỗi rõ, nói đúng việc đã xảy ra, gọi <code>chuyen_nhan_vien</code> ngay. Nếu chưa gửi: dừng và xác nhận vé chưa thay đổi.';this.render()},
- staff(r){this.log.push(['ok',`chuyen_nhan_vien(lý do: ${r}) → OK`]);this.msgs.push(ai(`Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, bạn không cần kể lại. <b>Chưa có yêu cầu hoàn nào được gửi.</b><div class="box done small"><b>Nhân viên thấy:</b> mã TRV-7Q2K · 2 hành khách · tin gốc "Nếu tôi không bay nữa thì có được hoàn tiền không?" · lý do: ${r} · trạng thái: chưa gửi hoàn.</div>`));this.st='Đã chuyển nhân viên';this.render()},
+ staff(r){if(this.transferred)return;this.transferred=true;this.log.push(['ok',`chuyen_nhan_vien(lý do: ${r}) → OK`]);this.msgs.push(ai(`Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, bạn không cần kể lại. <b>${this.sent?'Yêu cầu hoàn đã gửi, không thể tự huỷ.':'Chưa có yêu cầu hoàn nào được gửi.'}</b><div class="box done small"><b>Nhân viên thấy:</b> mã TRV-7Q2K · 2 hành khách · tin gốc "Nếu tôi không bay nữa thì có được hoàn tiền không?" · lý do: ${r} · trạng thái: ${this.sent?'đã gửi hoàn':'chưa gửi hoàn'}.</div>`));this.st='Đã chuyển nhân viên';this.render()},
  render(){$('#chat1').innerHTML=this.msgs.join('');states('#st1',this.ST,this.st);logTo('#log1',this.log);$('#why1').innerHTML=this.why}
 };
 $$('[data-p1]').forEach(b=>b.onclick=()=>{$$('[data-p1]').forEach(x=>x.classList.remove('on'));b.classList.add('on');D1.path=b.dataset.p1;D1.start()});
 $('#ck1').onchange=e=>$('#go1').disabled=!e.target.checked;
 $('#back1').onclick=()=>{$('#modal1').classList.remove('show');D1.st='Chưa gửi hoàn';D1.flights()};
-$('#go1').onclick=()=>{$('#modal1').classList.remove('show');D1.msgs.push(me('[Bấm] Tiếp tục hoàn vé · đã tích "mình hiểu"'));D1.staff('Khách muốn gửi hoàn; fixture thiếu số tiền/phương thức/thời hạn')};
+$('#go1').onclick=()=>{if(!$('#ck1').checked||D1.sent||D1.transferred)return;$('#modal1').classList.remove('show');D1.msgs.push(me('[Bấm] Tiếp tục hoàn vé · đã tích "mình hiểu"'));D1.staff('Khách muốn gửi hoàn; fixture thiếu số tiền/phương thức/thời hạn')};
 D1.start();
 
 /* ---------- §4 table ---------- */
 const AUTO=[
  ['tra_cuu_dat_cho','Tự làm','p-auto','Chỉ đọc. Dữ liệu cũ khiến khách chọn sai → hiện thời điểm tra cứu, kiểm lại trước giao dịch.','Khách chờ mà không thêm an toàn.','Loại duyệt mỗi lần (thừa bước); loại cấm (không còn căn cứ hỗ trợ).'],
- ['giu_cho_chuyen_moi','Tự làm có điều kiện','p-cond','Giữ sai gây hiểu nhầm nhưng chưa đổi vé, chưa dùng lần đổi miễn phí; tự nhả sau 20 phút.','BM 205 chỉ còn 4 chỗ, có thể hết trong lúc chờ duyệt.','Loại giữ nhiều chuyến / giữ từ câu "9h" mơ hồ; loại thêm lượt duyệt riêng.'],
+ ['giu_cho_chuyen_moi','Tự làm có điều kiện','p-cond','Giữ sai gây hiểu nhầm nhưng chưa đổi vé, chưa dùng lần đổi miễn phí; tự nhả sau 20 phút.','BM 205 chỉ còn 4 chỗ, có thể hết trong lúc chờ duyệt.','Loại giữ nhiều chuyến; cho giữ tạm BM 205 đủ chỗ khi hỏi rõ, chưa được đổi. Nhả chỗ là phần mở rộng do khách duyệt.'],
  ['doi_chuyen_bay','Cần khách duyệt','p-ask','Mất lần đổi miễn phí duy nhất; khó đảo, không có tool hoàn tác.','Có thể mất chỗ → dùng giữ chỗ 20 phút. Không vì sắp hết hạn mà tự đổi.','Loại tự làm ("ok" chưa rõ giờ/ngày/người); loại cấm (khách vẫn cần đổi khi đã xác nhận).'],
  ['gui_yeu_cau_hoan_ve','Cần khách duyệt riêng','p-ask','Gửi rồi không huỷ được; khách mất lựa chọn giữ vé; hoàn có thể kéo dài.','Chậm gửi hoàn, đổi lấy việc khách hiểu hậu quả.','Loại tự làm (hỏi ≠ yêu cầu); loại cấm (khách có quyền hoàn). Fixture thiếu chi tiết → chuyển nhân viên trước.'],
  ['chuyen_nhan_vien','Tự làm','p-auto','Đảo được; gửi kèm ngữ cảnh để khách không kể lại.','Chuyển mọi việc đơn giản có thể làm mất chuyến phù hợp.','Loại cấm (cần đường ngoài thẩm quyền); loại chuyển mọi ca.']];
