@@ -131,6 +131,22 @@
 - Nếu chưa gửi: Dừng thao tác và xác nhận vé chưa bị thay đổi.
 - Nếu đã gửi: Xin lỗi, thông báo không thể tự huỷ yêu cầu và gọi `chuyen_nhan_vien` ngay.
 - Nhân viên nhận thông tin đặt chỗ, lịch sử trò chuyện và thao tác sai.
+## 3.3. Nguyên tắc HAX/PAIR
+
+### 1. G10 — Thu hẹp phạm vi khi nghi ngờ
+- Áp dụng: Khi khách hỏi "Có được hoàn tiền không?"
+- AI chỉ giải thích chính sách, không tự gửi yêu cầu hoàn vé.
+- Trên prototype: Hiển thị nút "Tiếp tục hoàn vé", yêu cầu khách xác nhận trước khi gửi.
+
+### 2. G11 — Giải thích vì sao
+- Áp dụng: Khi AI thông báo khách được hoàn toàn bộ tiền vé.
+- AI dựa trên trạng thái chuyến BM 213 đã huỷ do bão và chính sách hãng Bay Mẫu.
+- Trên prototype: Hiển thị thông tin đặt chỗ và lý do đủ điều kiện hoàn tiền.
+
+### 3. G9 — Sửa dễ dàng
+- Áp dụng: Khi khách phát hiện AI gửi yêu cầu hoàn vé nhầm.
+- AI không tự huỷ yêu cầu vì tool không hỗ trợ hoàn tác.
+- Trên prototype: Hiển thị cảnh báo và nút "Gặp nhân viên" để yêu cầu hỗ trợ.
 
 ## §4. Mức tự chủ  (chặng 4)
 Với mỗi tool:
