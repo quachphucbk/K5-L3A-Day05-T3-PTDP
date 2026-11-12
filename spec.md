@@ -72,18 +72,7 @@ Với mỗi kịch bản đắt nhất:
 
 ## §4. Mức tự chủ (chặng 4)
 
-Với mỗi tool:
-
-- Mức của nhóm (tự làm / cần người duyệt / cấm). Nếu cần người duyệt: ai duyệt · người duyệt thấy gì · quá hạn thì sao.
-- Lý do theo cost-of-error: sai thì ai chịu gì · đảo lại được không · chờ người thì mất gì.
-- Phương án đã cân nhắc và vì sao loại.
-  Thêm:
-- Tool khó xếp nhất: mỗi người từng chọn gì, cái giá của mỗi phía (trỏ về kịch bản ở §2), nhóm chốt thế nào.
-- Thử mức đã đặt trên 2 kịch bản đắt nhất + 1 kịch bản bình thường: cái sai có bị chặn không? còn việc nào làm khi lẽ ra phải hỏi? người dùng bình thường có phải chờ vô ích không?
-- Luật thêm hoặc tool tách bước (nếu có), và vì sao.
-- Một mức tự chủ đã đổi lời hứa nào với người dùng.
-
-### 4.1. Mức cho từng tool và lý do
+### 4.1. Mức tự chủ, lý do và điều kiện duyệt cho từng tool
 
 Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện đi kèm là ràng buộc bắt buộc, không phải quyền để AI tự bỏ qua khi khách đang gấp.
 
@@ -95,7 +84,7 @@ Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện �
 | `gui_yeu_cau_hoan_ve` | **Cần khách duyệt riêng**, chỉ khi thông tin hoàn đã đủ và có căn cứ | Khách mất lựa chọn giữ vé để tiếp tục đổi theo ý định cũ; yêu cầu gửi rồi không huỷ được. Thời gian hoàn có thể kéo dài; không hứa tiền về ngay | Chậm gửi hoàn, nhưng cần đổi lấy việc khách hiểu hậu quả không rút lại được. Với câu chỉ hỏi chính sách, không có lý do phải gửi ngay | Loại tự làm vì hỏi “có được hoàn không” không phải yêu cầu gửi. Loại cấm mọi ca vì khách vẫn có quyền yêu cầu hoàn; nhưng fixture hiện thiếu thông tin hoàn cụ thể thì phải chuyển nhân viên trước khi gửi |
 | `chuyen_nhan_vien` | **Tự làm** khi khách yêu cầu hoặc gặp ca bắt buộc: đổi tên, trẻ bay một mình, lỗi giao dịch không tự sửa được | Có thể làm khách chờ và phải đổi kênh hỗ trợ; chuyển cuộc chat là thao tác đảo được. Gửi kèm ngữ cảnh cần thiết để tránh bắt khách kể lại | Trì hoãn hỗ trợ khiến ca khó kéo dài; nhưng chuyển mọi việc đơn giản cũng có thể làm khách mất chuyến phù hợp | Loại cấm vì cần đường xử lý ngoài thẩm quyền; loại chuyển mọi ca vì tra cứu, giữ chỗ và xác nhận rõ có thể xử lý trực tiếp |
 
-### 4.2. Ai duyệt, được xem gì, quá hạn thì sao?
+**Ai duyệt, được xem gì, quá hạn thì sao?**
 
 | Giao dịch | Ai duyệt? | Thông tin bắt buộc trước khi duyệt | Không duyệt hoặc quá hạn |
 |---|---|---|---|
@@ -104,15 +93,9 @@ Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện �
 
 **Giới hạn dữ liệu hiện tại:** fixture chỉ ghi được hoàn toàn bộ, không cho số tiền thanh toán, phương thức thanh toán và thời hạn hoàn cụ thể của TRV-7Q2K. Mục “Sản phẩm thật hôm nay” nêu có thể tới 90 ngày và có trường hợp voucher, không đủ để khẳng định kết quả riêng của đặt chỗ này. Vì vậy, bản thiết kế với fixture hiện tại **giải thích quyền hoàn rồi chuyển nhân viên để làm rõ**, chưa gọi tool gửi hoàn. Không thêm số tiền hoặc hạn trả giả như thể đã được xác minh.
 
-### 4.3. Tool khó xếp nhất: `giu_cho_chuyen_moi`
+### 4.2. Tool khó xếp nhất và thử trên ba kịch bản
 
-**Cái giá của hai phía:**
-
-- Nếu mọi lần giữ đều cần thêm lượt duyệt: có thể mất chỗ trong lúc khách đọc và trả lời; BM 205 chỉ còn 4 chỗ (§2, dòng “Ok lấy chuyến 9h nhé”).
-- Nếu AI tự chọn và giữ từ tin mơ hồ: có thể giữ BM 217 lúc 21:00 dù khách muốn BM 205 lúc 09:30; BM 217 còn 1 chỗ, không đủ cho hai người (§2, dòng 3–4).
-- Nếu cấm giữ chỗ: khách phải quyết định đổi trong khi chỗ có thể biến động, bỏ phí một tool có thể tự hết hạn mà chưa đổi vé.
-
-**Phương án lựa chọn cho từng thành viên đối với `giu_cho_chuyen_moi`:**
+**Lựa chọn của từng thành viên với `giu_cho_chuyen_moi`**
 
 | Thành viên | Phương án lựa chọn | Lý do và kịch bản làm căn cứ |
 |---|---|---|
@@ -121,13 +104,9 @@ Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện �
 | Bùi Anh Dũng | **Tự làm có điều kiện** | Giữ chỗ chưa đổi vé, chưa mất lần đổi miễn phí và tự nhả sau 20 phút nên có thể chủ động sau khi đủ dữ liệu. Ca “sớm nhất còn chỗ” (§2 dòng 3) phải chặn BM 217 vì chỉ còn 1 chỗ; chỉ giữ khi khách đã chọn rõ chuyến đủ cho cả hai |
 | Lê Minh Phụng | **Cần khách duyệt trước khi giữ** | Ưu tiên tránh nhầm “đã giữ” với “đã đổi” và tránh giữ phương án khách chưa muốn. Ca hỏi hoàn tiền (§2 dòng 2) cho thấy không nên suy ra yêu cầu hành động từ câu hỏi; cần làm rõ ý định và hiển thị thao tác cụ thể. Đổi lại, duyệt riêng mọi lần giữ có thể gây chậm không cần thiết |
 
-**Quyết định chốt trong thiết kế:** chọn **tự làm có điều kiện** sau khi khách chọn rõ chuyến và hành khách; không cần thêm một lượt duyệt giữ riêng. Trước khi rõ thì chỉ hỏi, không giữ theo suy đoán. Sau khi giữ, hiển thị “Đã giữ 2 chỗ — chưa đổi vé”, thời hạn 20 phút và bước xác nhận đổi riêng. Cách này giữ tốc độ của phương án tự làm và yêu cầu rõ ý định của phương án cần duyệt.
+Nhóm chốt **tự làm có điều kiện** sau khi khách chọn rõ chuyến và hành khách, và hệ thống kiểm tra đủ chỗ. Một lượt duyệt giữ riêng có thể làm khách mất chỗ trong lúc chờ. Cấm giữ chỗ cũng khiến khách phải quyết định đổi vé khi số chỗ còn biến động. Giữ chỗ tự hết sau 20 phút và chưa dùng lần đổi miễn phí. Sau khi giữ, giao diện hiện “Đã giữ 2 chỗ — chưa đổi vé”, thời hạn còn lại và bước xác nhận đổi riêng.
 
-**Vì sao chốt mức này:** yêu cầu khách chọn rõ chuyến/người đã giải quyết phần mơ hồ mà phía cần duyệt lo ngại; thêm một nút duyệt giữ riêng sau đó ít tạo thêm bảo vệ nhưng làm tăng thời gian chờ. Giữ chỗ tự hết sau 20 phút và chưa dùng lần đổi miễn phí, nên mức tự làm có điều kiện phù hợp hơn cấm hoặc duyệt mọi lần. Hành động khó đảo là đổi vé vẫn cần xác nhận riêng.
-
-**Áp dụng vào §2:** với “Ok lấy chuyến 9h nhé” (dòng 4), chưa giữ khi giờ còn mơ hồ; với “sớm nhất còn chỗ” (dòng 3), không giữ BM 217 cho hai người vì thiếu chỗ; với câu hỏi hoàn tiền (dòng 2), chỉ giải thích, không tự giữ hay gửi hoàn vì khách chưa yêu cầu giao dịch đó.
-
-### 4.4. Thử mức tự chủ trên hai ca đắt nhất và một ca bình thường
+**Hai ca đắt nhất và một ca bình thường**
 
 Đây là **walkthrough của thiết kế**, chưa phải kết quả chạy prototype.
 
@@ -137,7 +116,7 @@ Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện �
 | **Đắt nhất #2:** “Ok lấy chuyến 9h nhé.” | Hỏi lại: “Bạn muốn nói 21:00 ngày 12/11 hay 09:30 ngày 13/11?” Nêu 21:00 chỉ còn 1 chỗ, không đủ cả hai. Khách chọn rõ BM 205 cho An và Bình thì kiểm tra/giữ 2 chỗ, hiện bản xác nhận đổi riêng | Có: câu “ok” không kích hoạt đổi; luật đủ chỗ ngăn đổi cả hai vào chuyến chỉ còn 1 chỗ | Không tự giữ hoặc đổi khi giờ/người còn mơ hồ. Không khẳng định 09:30 là đúng ý khách chỉ vì 21:00 không đủ chỗ | Chỉ thêm bước hỏi cần thiết; khi đã rõ thì tự giữ, không phải chờ nhân viên |
 | **Bình thường:** “Giữ giúp tôi BM 205 lúc 09:30 ngày 13/11 cho cả An và Bình.” | Tra cứu, kiểm tra còn đủ 2 chỗ, gọi giữ chỗ; hiện đếm ngược và nhãn chưa đổi. Nếu muốn đổi, khách xem và bấm xác nhận giao dịch cụ thể | Có: giữ chỗ không dùng lần đổi miễn phí; không đổi trước khi duyệt | Không. Thông tin giữ đã đủ, nhưng chưa suy ra khách đã cho phép đổi | Không thêm lượt duyệt riêng cho tra cứu/giữ; chỉ duyệt ở bước thay đổi vé khó đảo |
 
-### 4.5. Luật bổ sung và tách bước
+### 4.3. Luật bổ sung, tách bước và lời hứa với người dùng
 
 1. **Tách hỏi quyền lợi → chuẩn bị giao dịch → thực hiện giao dịch.** Hai bước đầu là trạng thái giao diện, không tự tạo thêm tool có quyền gửi. Chỉ bước cuối mới gọi đổi/hoàn sau xác nhận hợp lệ. Chặn ca đắt nhất #1.
 2. **Không dùng một câu “ok” làm quyền chung.** Xác nhận phải gắn với loại thao tác, mã đặt chỗ, mã chuyến/ngày/giờ và từng hành khách; thay đổi thông tin thì phải duyệt lại. Chặn ca đắt nhất #2.
@@ -148,7 +127,7 @@ Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện �
 7. **Chặn giao dịch lặp và xử lý kết quả không rõ.** Khi đang gửi thì khoá bấm lặp. Chưa biết kết quả thì tra cứu/kiểm tra, không tự gửi lại đổi/hoàn. Không báo thành công trước kết quả; sai lệch sau giao dịch thì dừng và chuyển nhân viên kèm xác nhận/kết quả.
 8. **Chuyển người minh bạch.** Ghi rõ lý do, thông tin chuyển và trạng thái. Chỉ báo “Đã chuyển” sau khi tool thành công; thất bại thì nói chưa chuyển được. Chưa có SLA nên không hứa nhân viên phản hồi trong một số phút cụ thể.
 
-### 4.6. Mức tự chủ làm thay đổi lời hứa với người dùng
+**Lời hứa với người dùng**
 
 Vì `doi_chuyen_bay` cần khách duyệt, lời hứa của tính năng là:
 
