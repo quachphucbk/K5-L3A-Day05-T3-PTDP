@@ -62,6 +62,238 @@ Với mỗi kịch bản đắt nhất:
 - 2–3 nguyên tắc HAX/PAIR, mỗi cái trỏ vào một chỗ cụ thể (câu chữ hoặc chỗ trên màn hình).
 - Lỗi nào sửa câu chữ không cứu được (nếu có), và thiết kế cứu nó thế nào.
 
+### Kịch bản đắt #2: "Ok lấy chuyến 9h nhé." (lớp ②, xác nhận mơ hồ)
+
+**Bối cảnh màn hình ngay trước tin này**
+
+- **Đặt chỗ:** TRV-7Q2K · 2 hành khách
+  - Nguyễn Minh An (34 tuổi)
+  - Nguyễn Gia Bình (5 tuổi)
+- **AI vừa gọi `tra_cuu_dat_cho`** và đưa 3 chuyến thay thế:
+
+  | Chuyến | Ngày giờ | Còn chỗ | Đủ cho 2 người? |
+  |---|---|---|---|
+  | BM 217 | 12/11 · 21:00 | 1 | ✗ |
+  | BM 201 | 13/11 · 07:00 | 9 | ✓ |
+  | BM 205 | 13/11 · 09:30 | 4 | ✓ |
+
+- **Khách nhắn:** *"Ok lấy chuyến 9h nhé."*
+  - "9h" khớp **BM 217** (9 giờ tối nay) và **BM 205** (9 rưỡi sáng mai).
+
+---
+
+#### Bốn đường đi của trải nghiệm (guide 3.2)
+
+| Đường đi | Khách nhắn / chuyện xảy ra | AI làm gì | Khách thấy gì cuối cùng |
+|---|---|---|---|
+| **① Happy path** | *"Lấy chuyến 9h30 sáng mai cho 2 mẹ con nhé."* (rõ chuyến, rõ người) | Gọi `giu_cho_chuyen_moi` cho BM 205 → mở thẻ xác nhận cuối → khách bấm [Xác nhận đổi] → gọi `doi_chuyen_bay` | Vé mới BM 205 · 09:30 13/11 cho 2 người. Vẫn phải bấm xác nhận vì đổi vé khó đảo, nhưng **không hỏi lại** vì không có gì mơ hồ |
+| **② Low-confidence** *(kịch bản này)* | *"Ok lấy chuyến 9h nhé."* ("9h" khớp 2 chuyến) | Không đổi vé · giữ BM 205 · hiện 2 thẻ có ngày giờ đầy đủ + nhãn `⚠ "9h" khớp 2 chuyến, chưa xác định` | Một câu hỏi có nút sẵn; chọn xong mới tới thẻ xác nhận (chi tiết ở câu 1–5) |
+| **③ Failure / không căn cứ** | `giu_cho_chuyen_moi` báo **thất bại**: BM 205 vừa hết chỗ (dữ liệu "còn 4 chỗ" là ảnh chụp lúc 15:00, nhiều khách BM 213 cùng đổi) | **Không** nói "đã giữ", **không** hiện đồng hồ đếm ngược. Gọi lại `tra_cuu_dat_cho`, chỉ đưa chuyến còn đủ chỗ theo kết quả mới | *"BM 205 vừa hết chỗ, mình chưa đổi vé của bạn. Theo dữ liệu vừa tra, còn [chuyến] đủ cho 2 người."* Nếu không còn chuyến nào đủ chỗ → nút [Hỏi nhân viên] và [Xem điều kiện hoàn vé] (không tự gửi hoàn) |
+| **④ Correction** (khách sửa AI) | **a. Trước khi xác nhận:** *"Không, ý mình 9h tối nay."* | Nhả chỗ BM 205 nếu khách muốn · giải thích BM 217 chỉ còn 1 chỗ, không đủ cho 2 người · đưa [Giữ chuyến 09:30 sáng mai] · [Chuyển nhân viên] | Sửa tốn một lần bấm, chưa mất gì |
+| | **b. Sau khi xác nhận:** *"Nhầm rồi, mình không muốn chuyến này."* | Không tự gọi `doi_chuyen_bay` lần 2 · nói rõ lượt đổi miễn phí đã dùng · `chuyen_nhan_vien` ngay với gói thông tin đầy đủ | *"Vé đã đổi sang BM 205 lúc [giờ]. Mình không tự đổi lại được, mình đã chuyển bạn sang nhân viên, bạn không cần kể lại."* (đây cũng là ca **"trợ lý vừa đổi nhầm"** của Demo bắt buộc) |
+
+**Kịch bản này rơi vào đường ② và ④.** Thiết kế cố ý giữ khách ở ④a (sửa trước khi xác nhận, còn đảo được) thay vì ④b (sửa sau khi đã mất lượt đổi miễn phí): giữ chỗ và thẻ xác nhận cuối là 2 điểm dừng để khách sửa khi còn rẻ.
+
+---
+
+#### Câu 1. Lúc AI không chắc, nó nên làm gì? Vì sao không chọn hai cách kia?
+
+| Phương án | Làm gì | Kết quả |
+|---|---|---|
+| **A. Hỏi lại một câu (bằng nút) + giữ chỗ chuyến khả thi** | Không đổi vé · 2 thẻ có ngày giờ đầy đủ · giữ BM 205 trong 20 phút | ✅ **Chọn** |
+| B. Trả lời kèm giới hạn: tự chốt BM 205 rồi đổi luôn | Gọi `doi_chuyen_bay` ngay theo suy luận "21:00 không đủ chỗ" | ❌ Loại |
+| C. Dừng và chuyển nhân viên | Gọi `chuyen_nhan_vien` ngay | ❌ Loại |
+
+**✅ Vì sao chọn A**
+- "9h" có 2 nghĩa thật, và **cả hai đều có trong dữ liệu** (21:00 và 09:30).
+- Một lần bấm là gỡ được, khách chỉ mất vài giây.
+- `giu_cho_chuyen_moi` tự nhả sau 20 phút → giữ chỗ **không có giá khi sai**, mà lại chặn được rủi ro BM 205 (còn 4 chỗ) hết trong lúc khách đọc.
+
+**❌ Vì sao không chọn B (trả lời kèm giới hạn)**
+- Suy luận nghe hợp lý nhưng vẫn là **đoán**, và đoán bằng tool khó đảo (mất lượt đổi miễn phí).
+- Khách có thể muốn 21:00 (ví dụ một người bay trước), hoặc nhầm "9h" với BM 201 07:00 vì đọc vội.
+- Đúng thì là may, không phải nhờ thiết kế → vi phạm rubric riêng T3 mục 1 (chưa xác nhận rõ chuyến nào, cho ai).
+- Nhóm **giữ một phần** của B: dùng suy luận "21:00 không đủ chỗ" để **làm nổi** thẻ BM 205 và giữ chỗ nó, **không** để đổi vé.
+
+**❌ Vì sao không chọn C (chuyển người)**
+- Mơ hồ ở đây hẹp (2 lựa chọn, đều đọc được từ dữ liệu), không cần thẩm quyền của người.
+- Đang bão, nhiều khách BM 213 cùng đổi chuyến → chờ nhân viên thì BM 205 có thể hết chỗ. Đúng cái giá track nêu: *"bắt khách chờ nhân viên cho mọi việc thì chuyến tốt nhất hết chỗ trong lúc chờ"*.
+- Chuyển người chỉ dùng khi: khách muốn bay 21:00 (dính trẻ 5 tuổi bay một mình, ngoài phạm vi §1), hoặc vé đã bị đổi nhầm.
+
+**Phương án con đã cân nhắc trong A: gộp "chọn chuyến" và "xác nhận đổi" thành một lần bấm**
+- Lý do muốn gộp: khách đỡ phải bấm nhiều (*"đừng bắt tôi bấm qua mười màn hình"*).
+- Lý do loại:
+  - Đây là 2 quyết định khác nhau: *chuyến nào* và *chấp nhận mất lượt đổi miễn phí*.
+  - Nút gộp phải chứa cả cảnh báo không đảo lại → quá dài trên điện thoại, dễ bị bấm lướt.
+  - Giữ chỗ đã bảo vệ chỗ ngồi → bước bấm thứ hai không làm mất chuyến.
+
+---
+
+#### Câu 2. AI nói câu gì, nguyên văn? Câu đó có hứa điều AI không làm được không?
+
+**AI nói (nguyên văn):**
+
+> "Mình **chưa đổi vé** của bạn. Trong danh sách có 2 chuyến gần 9 giờ, bạn bấm chọn giúp mình đúng chuyến nhé:
+> - **09:30 sáng mai 13/11 (BM 205)**: còn 4 chỗ, đủ cho bạn và bé Bình. Mình đã **giữ tạm 2 chỗ** chuyến này trong 20 phút để không bị hết trong lúc bạn chọn. Giữ chỗ chưa đổi vé, chưa dùng lượt đổi miễn phí.
+> - **21:00 tối nay 12/11 (BM 217)**: chỉ còn 1 chỗ, **không đủ cho 2 người**.
+>
+> Lúc 15:00 dữ liệu chỗ trống là như trên, số chỗ có thể thay đổi."
+
+- AI **không xin lỗi**, không nói "bạn nói chưa rõ".
+- Câu hỏi quy về **danh sách AI đưa ra** ("trong danh sách có 2 chuyến gần 9 giờ"), không quy về khách.
+
+**Kiểm từng lời hứa trong câu:**
+
+| Lời trong câu | AI làm được không? | Căn cứ / điều kiện |
+|---|---|---|
+| "Mình chưa đổi vé" | ✅ Đúng | Chưa gọi `doi_chuyen_bay` |
+| "Đã giữ tạm 2 chỗ trong 20 phút" | ✅ Có điều kiện | `giu_cho_chuyen_moi` làm được, **nhưng chỉ được nói sau khi tool báo giữ thành công**. Giữ thất bại → câu đổi thành "BM 205 vừa hết chỗ, mình tra lại chuyến khác cho bạn" |
+| "Chưa dùng lượt đổi miễn phí" | ✅ Đúng | Bảng tool: giữ chỗ "chưa đổi vé" |
+| "Còn 4 chỗ" | ⚠ Chỉ đúng lúc đọc | Kèm câu "lúc 15:00… số chỗ có thể thay đổi", không hứa chắc còn chỗ |
+| (không có) | – | AI **không** hứa đổi được chuyến 21:00 cho 2 người, **không** hứa nhân viên xếp được chỗ, **không** nhắc bồi thường |
+
+→ Câu này không hứa điều nào nằm ngoài khả năng của 5 tool.
+
+---
+
+#### Câu 3. Người dùng thấy gì ngoài câu chữ?
+
+| Loại | Chỗ trên màn hình | Nội dung |
+|---|---|---|
+| **Độ chắc** | Nhãn vàng trên đầu 2 thẻ chuyến | `⚠ "9h" khớp 2 chuyến, chưa xác định` (AI cho khách thấy nó *không chắc*, chứ không chỉ hỏi) |
+| **Bằng chứng** | Dòng nhỏ dưới thẻ | `Dữ liệu chỗ trống lúc 15:00 12/11` + số chỗ còn lại trên từng thẻ |
+| **Nhãn** | Thẻ A (nổi bật) | `BM 205 · 09:30 sáng mai 13/11 · còn 4 chỗ · ✓ đủ cho 2 người` |
+| **Nhãn** | Thẻ B (mờ, nhãn đỏ) | `BM 217 · 21:00 tối nay 12/11 · còn 1 chỗ · ✗ không đủ cho 2 người` |
+| **Nhãn** | Dải trên đầu khung chat | `Đang giữ 2 chỗ BM 205 · còn 19:42` (đếm ngược) |
+| **Nút** | Thẻ A | **[Chọn chuyến này]** |
+| **Nút** | Thẻ B | **[Vì sao không chọn được?]** (không có nút đổi) |
+| **Nút** | Dải giữ chỗ | **[Nhả chỗ]** |
+| **Nút** | Chân khung chat | **[Hỏi nhân viên]**, luôn hiện |
+
+Giờ luôn hiện kèm **ngày + "sáng/tối" + "nay/mai"**, không bao giờ chỉ "21:00" hay "9h".
+
+---
+
+#### Câu 4. Người dùng làm gì tiếp được? Nếu không làm gì thì sao?
+
+| Khách muốn | Làm thế nào | Kết quả |
+|---|---|---|
+| **Chọn đúng chuyến** | Bấm [Chọn chuyến này] ở thẻ A → thẻ xác nhận cuối (bên dưới) → [Xác nhận đổi] | Lúc này mới gọi `doi_chuyen_bay` |
+| **Sửa lựa chọn** | Bấm [Chọn chuyến khác] trên thẻ xác nhận | Quay lại 2 thẻ, chưa đổi gì |
+| **Bỏ qua / hoàn tác giữ chỗ** | Bấm [Nhả chỗ] | 2 chỗ BM 205 được nhả ngay, vé và lượt đổi miễn phí nguyên vẹn |
+| **Hỏi người** | Bấm [Hỏi nhân viên], hoặc [Vì sao không chọn được?] → [Chuyển nhân viên] | Gọi `chuyen_nhan_vien` (xem câu 5) |
+| **Gõ lại chữ** ("ok", "9h", "ừ") | – | AI **không coi chữ là xác nhận**: *"Bạn bấm vào thẻ chuyến giúp mình nhé, mình chỉ đổi vé khi bạn bấm."* Gõ rõ ("9h30 sáng mai") → mở thẳng thẻ xác nhận cuối, vẫn phải bấm |
+
+**Thẻ xác nhận cuối:**
+
+> Đổi vé **TRV-7Q2K**
+> - Từ: BM 213 (đã huỷ)
+> - Sang: **BM 205 · 09:30 sáng mai 13/11**
+> - Hành khách: **Nguyễn Minh An, Nguyễn Gia Bình**
+> - ⚠ Việc này **dùng lần đổi miễn phí duy nhất**; đổi xong không đổi lại miễn phí được.
+>
+> **[Xác nhận đổi]** · **[Chọn chuyến khác]**
+
+**Bấm [Vì sao không chọn được?] ở thẻ B:**
+
+> "BM 217 chỉ còn 1 chỗ, bạn đi cùng bé Bình 5 tuổi nên cần 2 chỗ. Trẻ 5 tuổi bay một mình mình không xử lý được. Nếu bạn vẫn muốn bay tối nay, mình chuyển nhân viên hỗ trợ."
+>
+> **[Giữ chuyến 09:30 sáng mai]** · **[Chuyển nhân viên]**
+
+**Nếu khách không làm gì:**
+- Phút 15: thông báo đẩy *"Còn 5 phút giữ 2 chỗ BM 205 cho bạn."*
+- Phút 20: chỗ tự nhả, AI nhắn *"Đã nhả 2 chỗ giữ BM 205. Vé của bạn **chưa bị đổi**, lượt đổi miễn phí **vẫn còn** trong hạn 48 giờ. Bấm 'Xem lại chuyến' để tra chỗ mới."*
+- → Không có thao tác khó đảo nào xảy ra.
+
+---
+
+#### Câu 5. Ai được báo, sau bao lâu? Người đó thấy gì?
+
+| Khi nào | Ai được báo | Sau bao lâu | Người đó thấy gì |
+|---|---|---|---|
+| Chỉ hỏi lại, khách chọn bình thường | Không ai | – | Chưa có thao tác khó đảo nên không cần người. Sự kiện "xác nhận mơ hồ" được ghi log cho nhóm sản phẩm xem theo tuần (đếm bao nhiêu lần "9h" khớp 2 chuyến) |
+| Khách bấm [Hỏi nhân viên] / muốn bay tối nay | Nhân viên hỗ trợ | Báo ngay lúc bấm; mục tiêu nhận ca **≤ 5 phút**, tức còn ≥ 15 phút giữ chỗ để xử lý *(con số nhóm tự đặt, track không có)* | Gói chuyển ca: mã TRV-7Q2K, 2 hành khách, tin gốc "Ok lấy chuyến 9h nhé", 2 cách hiểu AI đã đưa, chuyến đang giữ + **giờ hết giữ**, lượt đổi miễn phí **chưa dùng** |
+| Khách báo "nhầm rồi" **sau** khi đã bấm [Xác nhận đổi] | Nhân viên hỗ trợ (ưu tiên cao) | Báo ngay, AI không tự sửa; mục tiêu nhận ca **≤ 5 phút** | Như trên + chuyến đã đổi sang, giờ đổi, chuyến khách muốn |
+
+Khi chuyển ca, AI nói với khách: *"Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, bạn không cần kể lại."*
+
+---
+
+#### Câu 6. Đây là lỗi hệ thống, người dùng hay ngữ cảnh? Cách xin lỗi và cách sửa đổi thế nào?
+
+| Tình huống | Loại lỗi | Cách nói | Cách sửa |
+|---|---|---|---|
+| "9h" khớp 2 chuyến (lỗi gốc) | **Ngữ cảnh** | Không đổ lỗi, không xin lỗi | Sửa thiết kế thẻ chuyến |
+| AI coi "ok" là xác nhận và đã đổi vé | **Hệ thống** | Xin lỗi rõ, nói đúng việc đã xảy ra | Chuyển nhân viên ngay |
+| Khách tự bấm nhầm rồi bấm [Xác nhận đổi] | **Người dùng** | Nói sự thật, không trách | Thẻ xác nhận nhắc lại đủ thông tin |
+
+**🟡 Lỗi ngữ cảnh (lỗi gốc của kịch bản)**
+- **Vì sao là ngữ cảnh:**
+  - Hệ thống chạy đúng thiết kế: đọc "9h" theo giờ 24h là 09:xx.
+  - Nhưng sai với cách người Việt nói thường ngày: buổi chiều nhắn "9h" thì hay là 9 giờ tối.
+  - Chính danh sách AI đưa ra trộn chuyến tối nay và sáng mai, chỉ ghi "21:00", "09:30", nên mới sinh ra mơ hồ.
+  - Khách nói như mọi người vẫn nói → **không phải lỗi người dùng**.
+- **Cách nói:**
+  - Không đổ lỗi ("bạn nói chưa rõ"), không xin lỗi rối rít vì chưa có gì hỏng.
+  - AI nhận phần mơ hồ về danh sách của mình: *"trong danh sách có 2 chuyến gần 9 giờ"*.
+  - Nói ngay điều khách lo nhất: *"mình **chưa đổi vé**"*.
+- **Cách sửa (thiết kế, không chỉ câu chữ):**
+  - Thẻ chuyến luôn ghi ngày + sáng/tối + nay/mai.
+  - Chuyến không đủ chỗ cho cả đoàn bị làm mờ, không có nút đổi.
+  - Chỉ nút bấm mới kích hoạt đổi vé.
+
+**🔴 Lỗi hệ thống (nếu AI đã đổi vé khi khách chỉ gõ "ok")**
+- **Vì sao là hệ thống:** AI đã làm thao tác khó đảo mà không có xác nhận hợp lệ.
+- **Cách nói:** xin lỗi rõ, nói đúng việc đã xảy ra, không giảm nhẹ. Ví dụ khách muốn bay tối nay nhưng AI đã đổi cả 2 người sang BM 205:
+  > "Mình đã đổi vé của bạn và bé Bình sang BM 205 lúc 09:30 sáng mai khi bạn chưa xác nhận, đó là lỗi của mình. Mình đã chuyển bạn sang nhân viên kèm đầy đủ thông tin, bạn không cần kể lại."
+- **Cách sửa:**
+  - AI không tự thử sửa thêm (không gọi `doi_chuyen_bay` lần 2).
+  - **Chuyển nhân viên ngay** với gói thông tin đầy đủ.
+  - Thiết kế ở câu 7 khiến nhánh này không xảy ra được.
+
+**🔵 Lỗi người dùng (nếu khách tự bấm nhầm thẻ rồi bấm [Xác nhận đổi])**
+- **Cách nói:** không xin lỗi thay hệ thống, cũng không trách khách; nói sự thật và đường lui còn lại:
+  > "Vé đã đổi sang [chuyến] theo xác nhận lúc [giờ]. Lượt đổi miễn phí đã dùng nên mình không đổi lại được, mình chuyển bạn sang nhân viên để xem còn cách nào."
+- **Cách giảm:** thẻ xác nhận cuối nhắc lại chuyến, ngày giờ, tên 2 hành khách và câu "dùng lần đổi miễn phí duy nhất".
+
+---
+
+#### Câu 7. Có lỗi nào sửa câu chữ không cứu được, chỉ thiết kế mới cứu được?
+
+Có 2 lỗi, đều thuộc loại guide nêu: **AI làm (hoặc nói đã làm) việc nó không có quyền**.
+
+**Lỗi 1: AI coi chữ "ok" là xác nhận và gọi `doi_chuyen_bay`**
+- **Vì sao sửa câu chữ không đủ:**
+  - Thêm vào prompt "hãy hỏi lại khi khách nói mơ hồ" chỉ **giảm xác suất**, không chặn được.
+  - Chỉ cần model một lần đánh giá "ok lấy chuyến 9h" là đủ rõ (vì nó đã tự suy ra 21:00 không đủ chỗ) là vé bị đổi, và không đảo lại được.
+- **Thiết kế cứu nó:**
+  1. **Tách tool thành 2 bước**
+     - AI chỉ được gọi bước **"đề xuất đổi"**: tạo thẻ xác nhận có `mã chuyến + danh sách hành khách`.
+     - Bước **"thực hiện đổi"** (`doi_chuyen_bay`) **chỉ chạy khi khách bấm [Xác nhận đổi]** trên thẻ đó, không chạy từ tin nhắn chữ.
+     - → AI không có đường nào tự đổi vé từ văn bản (chi tiết mức tự chủ ở §4).
+  2. **Luật cứng trước khi hiện nút đổi**
+     - `số chỗ còn ≥ số hành khách trong đặt chỗ`.
+     - → BM 217 (1 chỗ < 2 người) không bao giờ có nút đổi, dù model hiểu "9h" thành gì.
+  3. **Thẻ chuyến tự hiện giờ từ dữ liệu**
+     - Dạng "09:30 sáng mai 13/11" / "21:00 tối nay 12/11", không phụ thuộc AI viết giờ thế nào.
+     - → Mơ hồ "9h" bị cắt ngay từ lúc đưa danh sách.
+
+**Lỗi 2: AI nói "mình đã giữ 2 chỗ" nhưng giữ chỗ thật ra chưa chạy hoặc đã thất bại**
+- **Vì sao sửa câu chữ không đủ:** model viết câu trả lời và gọi tool là 2 việc tách rời; model có thể viết "đã giữ" trước khi biết kết quả. Khách tin là còn chỗ nên thong thả, rồi BM 205 hết thật.
+- **Thiết kế cứu nó:**
+  - Câu "đã giữ…" và dải đếm ngược **được ghép từ kết quả `giu_cho_chuyen_moi` trả về**, không để model tự viết.
+  - Tool báo thất bại → không hiện dải đếm ngược, câu đổi thành "BM 205 vừa hết chỗ, mình tra lại chuyến khác cho bạn".
+
+---
+
+#### Nguyên tắc HAX/PAIR (mỗi cái trỏ vào một chỗ)
+
+| Nguyên tắc | Trỏ vào chỗ nào | Tác dụng |
+|---|---|---|
+| **G10** — Thu hẹp phạm vi khi nghi ngờ | Câu mở đầu *"Mình **chưa đổi vé** của bạn. Trong danh sách có 2 chuyến gần 9 giờ, bạn bấm chọn giúp mình đúng chuyến nhé"* + nhãn `⚠ "9h" khớp 2 chuyến, chưa xác định` | Không chắc thì hỏi một câu có nút sẵn, thay vì gọi `doi_chuyen_bay` theo đoán |
+| **G11** — Giải thích vì sao | Nhãn đỏ `✗ không đủ cho 2 người` trên thẻ BM 217 + nút **[Vì sao không chọn được?]** | Khách hiểu vì sao AI đẩy BM 205 lên ("chỉ còn 1 chỗ, bé Bình 5 tuổi cần 2 chỗ"), không thấy bị áp đặt |
+| **G9** — Sửa dễ dàng | Dải `Đang giữ 2 chỗ BM 205 · còn 19:42` có nút **[Nhả chỗ]** + nút **[Chọn chuyến khác]** trên thẻ xác nhận | Mọi bước trước [Xác nhận đổi] đều lùi được bằng 1 lần bấm; hết giờ giữ thì tự nhả, vé và lượt đổi miễn phí vẫn nguyên |
+
 ## §4. Mức tự chủ  (chặng 4)
 Với mỗi tool:
 - Mức của nhóm (tự làm / cần người duyệt / cấm). Nếu cần người duyệt: ai duyệt · người duyệt thấy gì · quá hạn thì sao.
