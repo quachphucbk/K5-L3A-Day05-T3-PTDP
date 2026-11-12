@@ -5,7 +5,7 @@
 |---|---|---|
 | Quách Ngọc Phúc |  2A202603665|  |
 | Hồ Quốc Toản | 2A202603668 |  |
-|  |  |  |
+| Bùi Anh Dũng | 2A20203687  |  |
 
 ## §1. Lát cắt & phạm vi
 - Lát cắt (chép từ track).
