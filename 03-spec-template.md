@@ -12,10 +12,12 @@
 - Lát cắt (chép từ track).
 - 3 việc tính năng KHÔNG làm, mỗi việc một câu vì sao.
 
-## §2. Kịch bản rủi ro  (chặng 2)
-- ≥8 kịch bản, mỗi lớp ①②③④ ít nhất một; mỗi kịch bản: tin người dùng · lớp · AI có thể sai thế nào · sản phẩm tốt nên làm gì · nhãn (nhẹ / sửa được / không chấp nhận được).
-- Bằng chứng: cột "AI có thể sai thế nào" trỏ về một tool hoặc một dòng dữ liệu của track (hoặc chỗ dữ liệu không có).
-- Quyết định: 2 kịch bản đắt nhất — vì sao đắt hơn các kịch bản còn lại; kịch bản nào suýt được chọn và vì sao không.
+## §2. Kịch bản rủi ro — Lớp ① AI bịa thông tin
+
+| Tin người dùng | Lớp | AI có thể sai thế nào | Sản phẩm tốt nên làm gì | Nhãn |
+|---|---|---|---|---|
+| "Chuyến của mình mấy giờ bay vậy?" | ① AI bịa | AI trả lời chuyến BM 213 vẫn bay lúc 19:00, bỏ qua trạng thái huỷ. **Bằng chứng:** Dữ liệu `tra_cuu_dat_cho` ghi BM 213 lúc 19:00, trạng thái **ĐÃ HUỶ do bão**. | Kiểm tra trạng thái, đính chính chuyến đã huỷ và đề xuất chuyến thay thế trước khi khách hành động theo thông tin sai. | **Sửa được** |
+| "Chuyến bị huỷ rồi à? Vậy đổi giúp mình sang sáng mai nhé." | ① AI bịa | AI tự khẳng định chuyến BM 201 lúc 07:00 sẽ đến trước 09:00, khiến khách tin và quyết định đổi. **Bằng chứng:** `tra_cuu_dat_cho` chỉ cung cấp giờ khởi hành 07:00, không có giờ đến. Tool `doi_chuyen_bay` làm mất lượt đổi miễn phí, khó hoàn tác. | Không đoán giờ đến; thông báo thiếu dữ liệu và xác nhận rõ chuyến bay, hành khách trước khi đổi vé. | **Không chấp nhận được** |
 
 ## §3. Khi AI sai  (chặng 3)
 Với mỗi kịch bản đắt nhất:
