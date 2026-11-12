@@ -1,16 +1,23 @@
-# Dàn ý bài nộp *(spec.md — nộp trước 23:59 ngày lab của lớp)*
-
-> Copy dàn ý này vào `spec.md` của nhóm. Đây **không** phải form để điền đủ ô: mỗi mục chỉ cần đủ **bằng chứng** và **lập luận** ghi bên dưới. Viết ngắn, gạch đầu dòng là được. Hướng dẫn từng chặng: `02-guide.md`. Cách chấm: `04-rubric.md`.
->
-> **Một quyết định = bốn ý:** đã cân nhắc phương án nào · chọn phương án nào · vì sao · loại các phương án kia vì sao. Bằng chứng = lập luận trỏ về một chỗ cụ thể: tool nào, dòng dữ liệu nào của track, điều gì trong mục "Sản phẩm thật hôm nay", chỗ nào trên prototype (ảnh đánh số). Không chạy agent.
-
-```markdown
 # Bài nộp LAB5 — [Track] · Nhóm [tên]
 [Danh sách thành viên và việc mỗi người làm — copy bảng từ README]
 
+| Họ và Tên | Mã Học Viên | Việc đã làm |
+|---|---|---|
+| Quách Ngọc Phúc |  2A202603665|  |
+|  |  |  |
+|  |  |  |
+
 ## §1. Lát cắt & phạm vi
 - Lát cắt (chép từ track).
+- Trong “Đặt chỗ của tôi”, khi hành khách vừa nhận tin chuyến bay bị huỷ và nhắn hỏi, AI đề xuất và giữ chỗ chuyến thay thế, hỏi lại cho rõ, đổi vé, hay chuyển nhân viên, để khách tới nơi kịp mà không mất vé hay tiền vì một thao tác không đảo lại được.
 - 3 việc tính năng KHÔNG làm, mỗi việc một câu vì sao.
+
+| Ngoài phạm vi | Lý do |
+|---|---|
+| Đổi tên người bay | Không có tool hỗ trợ đổi tên trong phạm vi tính năng |
+| Tự xử lý trẻ 5 tuổi bay một mình | Vượt thẩm quyền của trợ lý; dữ liệu được cấp không đủ để xác định điều kiện trẻ bay một mình |
+| Cam kết hoặc thực hiện bồi thường tiền mặt | Chính sách dựng quy định không bồi thường tiền mặt khi chuyến bị huỷ do thời tiết |
+
 
 ## §2. Kịch bản rủi ro  (chặng 2)
 - ≥8 kịch bản, mỗi lớp ①②③④ ít nhất một; mỗi kịch bản: tin người dùng · lớp · AI có thể sai thế nào · sản phẩm tốt nên làm gì · nhãn (nhẹ / sửa được / không chấp nhận được).
@@ -46,4 +53,3 @@ Thêm:
 
 ## §7. Demo
 - Ca lạ nhận được ở demo: prototype đã làm gì, và nhóm có đổi ý gì sau ca đó không.
-```
