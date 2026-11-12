@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2449e8">
+  <meta name="description" content="Prototype Lab Day05: trợ lý AI hỗ trợ hoàn vé an toàn khi chuyến bay bị huỷ. Dữ liệu và thao tác hoàn toàn giả lập.">
+  <title>Bay Mẫu — Luôn bên hành trình của bạn</title>
+  <style>
+    /* 1. Bảng màu và các thành phần dùng chung. Không tải font hay thư viện ngoài. */
+    :root {
+      --ink: #172741; --muted: #65738a; --line: #e3e8f1; --paper: #fff;
+      --canvas: #f4f6fa; --blue: #284ce8; --blue-dark: #1d3bc0; --blue-soft: #eef2ff;
+      --green: #167451; --green-soft: #eaf7ef; --red: #b53939; --red-soft: #fff0ef;
+      --amber: #8d5a09; --amber-soft: #fff7e6; --purple: #7051b6;
+      --shadow: 0 8px 32px #25395806; --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--canvas); font-family: "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.65; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .5; }
+    button, a, input, summary { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid #7293ff; outline-offset: 4px; }
+    h1, h2, h3, p { margin: 0; }
+    svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+    code { font-family: Consolas, monospace; font-size: .82em; overflow-wrap: anywhere; }
+    .wrap { width: min(1180px, calc(100% - 64px)); margin: auto; }
+    .skip-link { position: absolute; top: -70px; left: 20px; z-index: 10; background: var(--ink); color: white; padding: 10px 16px; border-radius: 8px; }
+    .skip-link:focus { top: 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 7px; font-size: 11px; line-height: 1.45; font-weight: 650; }
+    .pill-blue { background: var(--blue-soft); color: var(--blue); }
+    .pill-green { background: var(--green-soft); color: var(--green); }
+    .pill-red { background: var(--red-soft); color: var(--red); }
+    .pill-amber { background: var(--amber-soft); color: var(--amber); }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+    .btn { border: 1px solid transparent; border-radius: 10px; padding: 12px 17px; display: inline-flex; justify-content: center; align-items: center; gap: 9px; font-size: 13px; font-weight: 650; line-height: 1.5; min-height: 46px; transition: background .18s, transform .18s, border-color .18s; }
+    .btn:not(:disabled):hover { transform: translateY(-1px); }
+    .btn-primary { color: #fff; background: var(--blue); }
+    .btn-primary:not(:disabled):hover { background: var(--blue-dark); }
+    .btn-secondary { background: white; border-color: #d8dfed; color: var(--ink); }
+    .btn-secondary:not(:disabled):hover { background: #f8faff; border-color: #a8b8e9; }
+    .btn-soft { background: var(--blue-soft); color: var(--blue); }
+    .btn-danger { background: var(--red); color: white; }
+    .btn-text { background: transparent; color: var(--muted); padding-left: 4px; padding-right: 4px; }
+    .btn .icon { width: 17px; height: 17px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .card { background: white; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .principle { display: inline-flex; color: var(--blue); background: #e9eeff; border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 750; line-height: 1.6; white-space: nowrap; vertical-align: middle; }
+    .text-link { display: inline-flex; align-items: center; gap: 7px; color: var(--blue); background: none; border: none; padding: 5px 0; font-size: 12px; font-weight: 650; text-align: left; }
+    .text-link .icon { width: 15px; height: 15px; }
+
+    /* 2. Đầu trang, lựa chọn tình huống và điều hướng giữa hai màn hình. */
+    .site-header { background: white; border-bottom: 1px solid var(--line); }
+    .header-inner { min-height: 83px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 11px; }
+    .brand-mark { display: grid; place-items: center; width: 39px; height: 39px; color: white; background: var(--blue); border-radius: 12px; transform: rotate(-5deg); }
+    .brand-mark .icon { width: 25px; height: 25px; }
+    .brand-name { font-size: 24px; line-height: 1.1; font-weight: 750; letter-spacing: -.9px; }
+    .brand-name span { color: var(--blue); }
+    .brand-tagline { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: .03em; }
+    .header-right { display: flex; align-items: center; gap: 22px; }
+    .header-label { color: var(--muted); font-size: 12px; padding-right: 23px; border-right: 1px solid var(--line); }
+    .demo-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--green); }
+    .hero { padding: 39px 0 27px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+    .hero .eyebrow { color: var(--blue); margin-bottom: 9px; }
+    h1 { font-size: clamp(29px, 3.5vw, 39px); font-weight: 700; line-height: 1.27; letter-spacing: -1.25px; }
+    h1 span { color: var(--blue); }
+    .hero p { margin-top: 11px; color: var(--muted); font-size: 13px; }
+    .hero-note { display: flex; align-items: center; gap: 10px; padding-bottom: 3px; font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .hero-note .icon { width: 26px; height: 26px; color: var(--green); }
+    .hero-note strong { display: block; font-size: 12px; color: var(--ink); font-weight: 650; }
+    .demo-panel { background: #e9edf5; padding: 14px 16px; border: 1px solid #dfe5ef; border-radius: 14px; }
+    .demo-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .demo-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #4f5f78; }
+    .demo-title .icon { width: 15px; height: 15px; }
+    .reset-button { border: none; background: transparent; padding: 3px; display: inline-flex; align-items: center; gap: 5px; color: #53627b; font-size: 11px; }
+    .reset-button .icon { width: 13px; height: 13px; }
+    .scenario-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .scenario { display: flex; align-items: center; text-align: left; gap: 10px; padding: 10px 13px; border: 1px solid transparent; border-radius: 9px; color: #607087; background: #ffffff80; min-width: 0; }
+    .scenario:hover { background: white; }
+    .scenario[aria-pressed="true"] { border-color: #c1cef9; color: var(--blue); background: white; box-shadow: 0 2px 6px #284ce80a; }
+    .scenario-index { display: grid; place-items: center; width: 27px; height: 27px; flex: 0 0 auto; border: 1px solid #dde3ef; background: #f5f7fb; border-radius: 7px; font-size: 10px; font-weight: 700; }
+    .scenario[aria-pressed="true"] .scenario-index { background: var(--blue); border-color: var(--blue); color: white; }
+    .scenario strong { display: block; font-size: 12px; font-weight: 650; }
+    .scenario small { display: block; font-size: 10px; margin-top: 1px; color: var(--muted); }
+    .demo-caption { color: var(--muted); font-size: 10px; margin-top: 8px; }
+    .screen-nav { display: flex; gap: 28px; margin: 25px 0 21px; border-bottom: 1px solid #dce3ee; }
+    .screen-tab { position: relative; display: flex; align-items: center; gap: 9px; padding: 0 0 12px; border: 0; background: none; color: var(--muted); font-size: 13px; font-weight: 600; }
+    .screen-tab b { font-size: 10px; width: 23px; height: 23px; display: grid; place-items: center; background: #e7ebf2; color: var(--muted); border-radius: 50%; }
+    .screen-tab[aria-selected="true"] { color: var(--blue); }
+    .screen-tab[aria-selected="true"] b { color: white; background: var(--blue); }
+    .screen-tab[aria-selected="true"]::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; border-radius: 3px 3px 0 0; background: var(--blue); }
+    .main-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); gap: 23px; align-items: start; }
+    .main-column, .aside-column { min-width: 0; display: grid; gap: 17px; }
+    .screen { animation: arrive .25s ease-out; }
+    @keyframes arrive { from { opacity: .5; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+    /* 3. Hội thoại, căn cứ và bước xác nhận nằm trong cùng một màn hình. */
+    .chat-header { display: flex; align-items: center; gap: 12px; padding: 21px 24px; border-bottom: 1px solid var(--line); }
+    .assistant-avatar { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 12px; color: var(--blue); background: var(--blue-soft); flex: 0 0 auto; }
+    .assistant-avatar .icon { width: 22px; height: 22px; }
+    .chat-heading { flex: 1; }
+    .chat-heading h2 { font-size: 14px; font-weight: 700; }
+    .chat-heading p { color: var(--muted); font-size: 11px; margin-top: 1px; }
+    .chat-content { padding: 23px 24px 20px; }
+    .conversation-date { text-align: center; color: #8390a4; font-size: 10px; letter-spacing: .02em; margin-bottom: 20px; }
+    .message-label { font-size: 10px; font-weight: 650; color: var(--muted); margin-bottom: 6px; display: flex; gap: 7px; align-items: center; }
+    .customer-message { margin-left: 50px; margin-bottom: 25px; }
+    .customer-message .message-label { justify-content: flex-end; }
+    .customer-bubble { background: #edf1f9; border: 1px solid #e7ebf3; padding: 14px 17px; font-size: 13px; border-radius: 14px 3px 14px 14px; color: #33445f; }
+    .ai-bubble { background: white; font-size: 14px; line-height: 1.9; }
+    .reply-leading { display: flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 650; color: var(--blue); margin-bottom: 9px; }
+    .reply-leading .icon { width: 14px; height: 14px; }
+    .policy-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 16px 0 14px; }
+    .benefit { padding: 12px 13px; border: 1px solid #dfe6fa; border-radius: 10px; background: #f9faff; display: flex; gap: 10px; align-items: flex-start; }
+    .benefit .icon { color: var(--blue); width: 19px; height: 19px; margin-top: 3px; }
+    .benefit strong { display: block; font-size: 12px; font-weight: 700; }
+    .benefit small { display: block; font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .evidence { border-left: 2px solid #b9c8fb; background: #f7f9fe; padding: 11px 14px; margin: 17px 0; border-radius: 0 8px 8px 0; }
+    .evidence p { color: #586984; font-size: 11px; line-height: 1.8; }
+    .evidence strong { color: #374965; }
+    .evidence-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; color: #374965; margin-bottom: 3px; font-weight: 650; }
+    .safety-note { display: flex; align-items: flex-start; gap: 8px; color: var(--green); font-size: 11px; margin: 15px 0 18px; }
+    .safety-note .icon { width: 16px; height: 16px; margin-top: 1px; }
+    .chat-footer { padding: 14px 24px; border-top: 1px solid var(--line); background: #fbfcfe; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .chat-footer p { font-size: 10px; color: var(--muted); }
+    .policy-detail { margin-top: 18px; background: #f7f9fd; border: 1px solid var(--line); border-radius: 10px; padding: 16px; font-size: 12px; }
+    .policy-detail h3 { font-size: 13px; margin-bottom: 9px; }
+    .policy-detail ul { padding-left: 19px; margin: 0; color: #4d5f79; }
+    .policy-detail li + li { margin-top: 6px; }
+    .policy-detail .small { margin-top: 10px; color: var(--muted); font-size: 10px; }
+    .inline-panel { margin-top: 20px; border: 1px solid #c9d5fa; border-radius: 13px; padding: 20px; background: #f8faff; scroll-margin-top: 20px; }
+    .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .panel-heading h3 { font-size: 16px; font-weight: 700; }
+    .inline-panel > p { font-size: 12px; color: var(--muted); }
+    .passenger-list { list-style: none; padding: 0; margin: 15px 0; display: grid; gap: 8px; }
+    .passenger-list li { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .passenger-list .icon { width: 16px; height: 16px; color: #6a7f9e; }
+    .passenger-list span small { color: var(--muted); font-size: 11px; }
+    .warning { display: flex; gap: 10px; padding: 12px 14px; border-radius: 9px; font-size: 12px; background: var(--amber-soft); color: var(--amber); line-height: 1.75; }
+    .warning .icon { width: 18px; height: 18px; margin-top: 2px; }
+    .consent-label { display: flex; align-items: flex-start; gap: 11px; font-size: 12px; color: #405372; margin: 17px 0; cursor: pointer; }
+    .consent-label input { flex: 0 0 auto; width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--blue); }
+    .confirm-help { font-size: 10px; color: var(--muted); margin: 10px 0 0; }
+    .result-box { margin-top: 18px; padding: 19px; border: 1px solid #c8e7d5; background: var(--green-soft); border-radius: 12px; }
+    .result-box h3 { color: var(--green); font-size: 15px; margin-bottom: 7px; display: flex; align-items: center; gap: 8px; }
+    .result-box p { color: #416a58; font-size: 12px; }
+    .result-box p + p { margin-top: 7px; }
+    .low-confidence { background: var(--amber-soft); border: 1px solid #f1dcac; border-radius: 11px; padding: 17px; margin-top: 10px; }
+    .low-confidence h3 { color: var(--amber); font-size: 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .low-confidence p { color: #785e37; font-size: 12px; }
+    .low-confidence .actions { margin-top: 17px; }
+    .support-box { border: 1px solid #cbd9f7; border-radius: 12px; background: #f5f8ff; padding: 19px; margin-top: 18px; scroll-margin-top: 20px; }
+    .support-box h3 { font-size: 15px; margin-bottom: 6px; color: #284791; display: flex; align-items: center; gap: 8px; }
+    .support-box p { font-size: 12px; color: #596e91; }
+    .handoff-data { margin-top: 14px; background: white; border: 1px solid #e2e8f7; border-radius: 8px; padding: 12px 14px; }
+    .handoff-data dt { font-size: 10px; color: var(--muted); margin-top: 9px; }
+    .handoff-data dt:first-child { margin-top: 0; }
+    .handoff-data dd { margin: 2px 0 0; font-size: 11px; overflow-wrap: anywhere; }
+    .handoff-data ol { margin: 5px 0 0; padding-left: 17px; }
+    .handoff-data li + li { margin-top: 4px; }
+
+    /* 4. Thẻ chuyến bay, trạng thái yêu cầu và quyền tự chủ của AI. */
+    .ticket { overflow: hidden; border-radius: var(--radius); color: white; background: #1b3156; box-shadow: 0 12px 25px #1b315618; }
+    .ticket-top { position: relative; padding: 23px 24px 22px; background: radial-gradient(ellipse at 100% 0, #385988 0, transparent 65%); }
+    .ticket-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 19px; }
+    .ticket-heading .eyebrow { color: #b3c3df; font-size: 9px; letter-spacing: .14em; }
+    .ticket-heading .icon { color: #b3c3df; width: 18px; height: 18px; }
+    .booking-code { font-family: Consolas, monospace; font-weight: 700; font-size: 26px; letter-spacing: 2px; line-height: 1.2; }
+    .ticket-route { display: flex; align-items: center; gap: 14px; margin: 26px 0 18px; }
+    .airport { flex: 0 0 auto; }
+    .airport b { font-size: 30px; font-weight: 650; line-height: 1.1; letter-spacing: 1px; display: block; }
+    .airport span { color: #b7c6df; font-size: 10px; display: block; margin-top: 7px; }
+    .flight-line { position: relative; flex: 1; display: flex; justify-content: center; align-items: center; color: #bed078; }
+    .flight-line::before { content: ""; width: 100%; border-top: 1px dashed #7791b4; position: absolute; }
+    .flight-line .icon { position: relative; width: 28px; height: 28px; background: #213c62; padding: 4px; box-sizing: content-box; }
+    .ticket-schedule { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+    .ticket-schedule span { color: #b7c6df; font-size: 10px; }
+    .cancelled-banner { display: flex; gap: 8px; align-items: center; margin-top: 18px; padding: 9px 11px; border-radius: 6px; background: #ffffff0b; border: 1px solid #ffffff1c; color: #ffcdc6; font-size: 11px; }
+    .cancelled-banner .icon { width: 15px; height: 15px; }
+    .ticket-bottom { border-top: 1px dashed #536786; padding: 16px 24px 19px; position: relative; }
+    .ticket-bottom::before, .ticket-bottom::after { content: ""; width: 16px; height: 16px; border-radius: 50%; background: var(--canvas); position: absolute; top: -9px; }
+    .ticket-bottom::before { left: -8px; }
+    .ticket-bottom::after { right: -8px; }
+    .ticket-bottom > p { color: #b7c6df; font-size: 10px; margin-bottom: 8px; }
+    .ticket-passenger { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; }
+    .ticket-passenger + .ticket-passenger { margin-top: 6px; }
+    .ticket-passenger span { color: #b7c6df; font-size: 10px; }
+    .status-card { padding: 19px 20px; }
+    .status-card .eyebrow { color: var(--muted); font-size: 9px; margin-bottom: 12px; }
+    .status-value { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; font-weight: 650; color: var(--green); }
+    .status-value .icon { width: 19px; height: 19px; margin-top: 2px; }
+    .status-value.is-error { color: var(--red); }
+    .status-card .status-description { font-size: 11px; color: var(--muted); margin-top: 8px; }
+    .mini-note { display: flex; gap: 10px; padding: 2px 3px; color: var(--muted); font-size: 11px; }
+    .mini-note .icon { color: #8a9bb6; width: 18px; height: 18px; margin-top: 2px; }
+    .autonomy { margin-top: 24px; padding: 19px 22px; background: #edf1f7; border: 1px solid #e0e6ef; border-radius: 13px; display: grid; grid-template-columns: .65fr 1fr 1.25fr; gap: 23px; align-items: center; }
+    .autonomy-title { font-size: 13px; font-weight: 650; }
+    .autonomy-title p { color: var(--muted); font-size: 10px; font-weight: 400; margin-top: 2px; }
+    .autonomy-item { display: flex; gap: 10px; align-items: flex-start; }
+    .autonomy-item > .icon { width: 17px; height: 17px; color: var(--green); margin-top: 4px; }
+    .autonomy-item:last-child > .icon { color: var(--blue); }
+    .autonomy-item strong { font-size: 9px; letter-spacing: .07em; display: block; color: #3c6a59; }
+    .autonomy-item:last-child strong { color: var(--blue); }
+    .autonomy-item code { font-size: 11px; color: #475e7d; }
+    .autonomy-item p { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .audit { margin-top: 18px; background: white; border: 1px solid var(--line); border-radius: 11px; font-size: 11px; }
+    .audit summary { cursor: pointer; padding: 12px 17px; color: #62738d; }
+    .audit ul { list-style: none; padding: 0 17px 14px; margin: 0; }
+    .audit li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; border-top: 1px solid var(--line); padding: 9px 0; }
+    .audit time { color: var(--muted); font-size: 10px; }
+    .audit code { font-size: 10px; }
+    .audit p { color: var(--muted); font-size: 10px; }
+    .audit .event-error { color: var(--red); }
+    .site-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 25px 0 30px; color: #7c889c; font-size: 10px; }
+    .site-footer span:first-child { display: flex; align-items: center; gap: 6px; }
+    .site-footer .icon { width: 13px; height: 13px; }
+
+    /* 5. Màn hình sự cố: báo trung thực, không có thao tác huỷ giả. */
+    .incident-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 24px; border-bottom: 1px solid #f1dedd; background: #fffafa; }
+    .incident-heading h2 { font-size: 14px; display: flex; gap: 9px; align-items: center; }
+    .incident-heading h2 .icon { color: var(--red); }
+    .incident-content { padding: 23px 24px; }
+    .empty-incident { padding: 26px 6px; text-align: center; }
+    .empty-incident .empty-icon { width: 62px; height: 62px; border-radius: 18px; display: grid; place-items: center; margin: 0 auto 18px; background: #fff1ee; color: #c96953; }
+    .empty-icon .icon { width: 29px; height: 29px; }
+    .empty-incident h3 { font-size: 21px; letter-spacing: -.4px; margin-bottom: 10px; }
+    .empty-incident p { color: var(--muted); font-size: 12px; max-width: 380px; margin: 0 auto 18px; }
+    .simulation-label { font-size: 10px; color: #9b746a; margin-top: 11px; }
+    .error-banner { padding: 17px; border: 1px solid #f1c9c5; background: var(--red-soft); border-radius: 11px; margin-bottom: 21px; }
+    .error-banner h3 { display: flex; gap: 9px; align-items: center; color: var(--red); font-size: 15px; margin-bottom: 6px; }
+    .error-banner p { color: #9d5550; font-size: 12px; }
+    .error-transcript { display: grid; gap: 16px; margin-top: 17px; }
+    .error-transcript .customer-message { margin-bottom: 0; }
+    .wrong-response { border-left: 2px solid #e4a5a0; padding: 11px 14px; background: #fdf6f5; font-size: 12px; color: #965b55; border-radius: 0 8px 8px 0; }
+    .wrong-response small { display: block; font-size: 9px; font-weight: 650; color: var(--red); margin-bottom: 3px; }
+    .correction-response { border: 1px solid #e4e5f7; border-radius: 11px; padding: 17px; background: #fafaff; font-size: 13px; line-height: 1.9; }
+    .correction-response .message-label { color: var(--purple); }
+    .incident-evidence { margin: 21px 0; padding: 15px 17px; border: 1px solid var(--line); border-radius: 10px; background: #fafbfe; }
+    .incident-evidence h3 { font-size: 12px; margin-bottom: 10px; }
+    .evidence-row { display: flex; justify-content: space-between; gap: 14px; font-size: 11px; padding: 5px 0; }
+    .evidence-row dt { color: var(--muted); }
+    .evidence-row dd { margin: 0; max-width: 65%; text-align: right; overflow-wrap: anywhere; }
+    .complaint-button { width: 100%; color: #7351a0; border: 1px solid #d9cee9; background: #fbf8ff; border-radius: 9px; padding: 12px 14px; text-align: left; font-size: 12px; margin-top: 17px; }
+    .complaint-button small { display: block; color: #827195; font-size: 10px; margin-bottom: 3px; }
+    .incident-footnote { margin-top: 13px; color: var(--muted); font-size: 11px; }
+    .incident-footnote .principle { margin-right: 4px; }
+    .toast { position: fixed; z-index: 5; bottom: 22px; left: 50%; transform: translateX(-50%); background: #172741; color: white; border: 1px solid #ffffff24; border-radius: 11px; padding: 12px 19px; box-shadow: 0 8px 30px #17274126; width: max-content; max-width: calc(100% - 32px); font-size: 12px; }
+
+    /* 6. Bố cục thích ứng với máy tính bảng, điện thoại và chế độ giảm chuyển động. */
+    @media (min-width: 1500px) { .wrap { width: min(1240px, calc(100% - 96px)); } .hero { padding-top: 46px; } }
+    @media (max-width: 950px) {
+      .wrap { width: calc(100% - 40px); }
+      .main-grid { grid-template-columns: minmax(0, 1.4fr) minmax(270px, 1fr); gap: 17px; }
+      .hero-note { display: none; }
+      .chat-content, .incident-content { padding: 20px; }
+      .chat-header, .chat-footer { padding-left: 20px; padding-right: 20px; }
+      .policy-benefits { grid-template-columns: 1fr; }
+      .scenario { padding: 9px; gap: 7px; }
+      .scenario-index { display: none; }
+      .autonomy { grid-template-columns: 1fr 1fr; gap: 15px; }
+      .autonomy-title { grid-column: 1 / -1; }
+    }
+    @media (max-width: 720px) {
+      .wrap { width: calc(100% - 32px); }
+      .header-inner { min-height: 72px; }
+      .brand-name { font-size: 22px; }
+      .brand-mark { width: 35px; height: 35px; }
+      .header-label { display: none; }
+      .demo-badge { font-size: 10px; }
+      .hero { padding: 27px 0 23px; }
+      h1 { font-size: 30px; letter-spacing: -.9px; }
+      .hero p { font-size: 12px; }
+      .scenario-list { grid-template-columns: 1fr 1fr; }
+      .scenario-index { display: grid; }
+      .demo-panel { padding: 12px; }
+      .demo-title { font-size: 10px; }
+      .screen-nav { gap: 22px; margin-top: 22px; }
+      .screen-tab { font-size: 11px; gap: 7px; }
+      .main-grid { grid-template-columns: 1fr; }
+      .aside-column { grid-template-columns: 1fr; }
+      .ticket-top { padding: 22px 25px; }
+      .ticket-route { gap: 26px; margin: 22px 0 17px; }
+      .airport b { font-size: 34px; }
+      .chat-header { padding: 18px; gap: 9px; }
+      .chat-content, .incident-content { padding: 19px 18px; }
+      .chat-header > .pill { font-size: 9px; padding: 5px 7px; }
+      .chat-heading h2 { font-size: 13px; }
+      .chat-heading p { font-size: 10px; }
+      .customer-message { margin-left: 24px; }
+      .ai-bubble { font-size: 13px; }
+      .customer-bubble { font-size: 12px; }
+      .policy-benefits { grid-template-columns: 1fr 1fr; }
+      .benefit { padding: 11px; gap: 7px; }
+      .benefit .icon { display: none; }
+      .benefit strong { font-size: 11px; }
+      .chat-footer { padding: 12px 18px; }
+      .chat-footer p { max-width: 160px; }
+      .inline-panel { padding: 16px; }
+      .actions > .btn { flex: 1 1 auto; }
+      .autonomy { padding: 17px; gap: 16px; grid-template-columns: 1fr; }
+      .autonomy-title { grid-column: auto; }
+      .autonomy-item { padding-top: 11px; border-top: 1px solid #dbe3ef; }
+      .site-footer { align-items: flex-start; font-size: 9px; }
+      .site-footer span:first-child { max-width: 245px; align-items: flex-start; }
+      .evidence-row { flex-direction: column; gap: 2px; }
+      .evidence-row dd { text-align: left; max-width: 100%; }
+    }
+    @media (max-width: 360px) { .wrap { width: calc(100% - 24px); } .brand-tagline { display: none; } .screen-nav { gap: 13px; } .screen-tab { font-size: 10px; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Đến nội dung chính</a>
+
+  <!-- Bộ biểu tượng SVG nội bộ: trang vẫn chạy khi không có Internet. -->
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
+    <symbol id="i-plane" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9L2 9 22 2Z"/><path d="m11 13 5-5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/><path d="m20 2 .7 1.3L22 4l-1.3.7L20 6l-.7-1.3L18 4l1.3-.7L20 2Z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2 7M3 4v7h7"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 4.2 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></symbol>
+    <symbol id="i-support" viewBox="0 0 24 24"><path d="M4 14v-3a8 8 0 0 1 16 0v3M4 12H3v6h4v-6H4Zm16 0h1v6h-4v-6h3Zm0 6v1a2 2 0 0 1-2 2h-4"/></symbol>
+    <symbol id="i-refund" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18m-12 5H7m7 0h3"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 17H6a4 4 0 0 1 0-8h1a6 6 0 0 1 11-2 5 5 0 0 1 0 10h-1m-7 0-1 4m5-4-1 4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 5h18v5a2 2 0 0 0 0 4v5H3v-5a2 2 0 0 0 0-4V5Zm12 0v3m0 3v2m0 3v3"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand" aria-label="Bay Mẫu, chăm sóc hành trình">
+        <div class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg></div>
+        <div><div class="brand-name">bay<span>mẫu.</span></div><div class="brand-tagline">Luôn bên hành trình của bạn</div></div>
+      </div>
+      <div class="header-right"><span class="header-label">Trung tâm hỗ trợ hành khách</span><span class="demo-badge"><span class="dot"></span> Dữ liệu mô phỏng</span></div>
+    </div>
+  </header>
+
+  <main id="main-content" class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <div><div class="eyebrow">Chăm sóc chuyến bay · Lab Day05 / T3</div><h1 id="page-title">Hành trình thay đổi.<br><span>Sự hỗ trợ luôn ở đây.</span></h1><p>Cùng bạn hiểu rõ quyền lợi và chọn bước tiếp theo khi chuyến bay bị huỷ.</p></div>
+      <div class="hero-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><div><strong>Bạn quyết định, AI hỗ trợ.</strong>Mọi yêu cầu hoàn vé đều cần bạn xác nhận.</div></div>
+    </section>
+
+    <!-- Các nút tình huống bắt đầu phiên demo mới; không phải chức năng huỷ hoàn vé. -->
+    <section class="demo-panel" aria-label="Bộ điều khiển tình huống dành cho buổi demo">
+      <div class="demo-heading"><div class="demo-title"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg> KHÔNG GIAN THỬ NGHIỆM</div><button class="reset-button" data-action="reset"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg>Làm mới demo</button></div>
+      <div class="scenario-list" role="group" aria-label="Chọn một trong bốn đường đi">
+        <button class="scenario" data-scenario="happy" aria-pressed="true"><span class="scenario-index">01</span><span><strong>Happy path</strong><small>AI trả lời đúng</small></span></button>
+        <button class="scenario" data-scenario="low" aria-pressed="false"><span class="scenario-index">02</span><span><strong>Low-confidence</strong><small>Chưa đủ dữ liệu</small></span></button>
+        <button class="scenario" data-scenario="failure" aria-pressed="false"><span class="scenario-index">03</span><span><strong>Failure</strong><small>AI gửi nhầm</small></span></button>
+        <button class="scenario" data-scenario="correction" aria-pressed="false"><span class="scenario-index">04</span><span><strong>Correction</strong><small>Khách sửa lỗi AI</small></span></button>
+      </div>
+      <p class="demo-caption">Chọn tình huống hoặc làm mới để bắt đầu một phiên giả lập khác. Đây không phải thao tác huỷ yêu cầu đã gửi.</p>
+    </section>
+
+    <!-- Chỉ hai tab tương ứng với đúng hai màn hình chính. -->
+    <nav class="screen-nav" role="tablist" aria-label="Hai màn hình của prototype">
+      <button id="tab-policy" class="screen-tab" role="tab" aria-selected="true" aria-controls="screen-policy" data-screen="policy"><b>1</b>Chính sách & xác nhận</button>
+      <button id="tab-incident" class="screen-tab" role="tab" aria-selected="false" aria-controls="screen-incident" tabindex="-1" data-screen="incident"><b>2</b>Xử lý khi AI sai</button>
+    </nav>
+
+    <div class="main-grid">
+      <div class="main-column">
+        <!-- Màn hình 1: hỏi chính sách, mở chi tiết, xác nhận và kết quả ngay trong thẻ. -->
+        <section id="screen-policy" class="screen card" role="tabpanel" aria-labelledby="tab-policy">
+          <div class="chat-header"><div class="assistant-avatar"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg></div><div class="chat-heading"><h2>Mây · Trợ lý chuyến bay</h2><p>Ở đây để giúp bạn chọn điều phù hợp</p></div><span class="pill pill-blue">Trợ lý AI</span></div>
+          <div class="chat-content">
+            <p class="conversation-date">PHIÊN MÔ PHỎNG · 12 THÁNG 11, 2026</p>
+            <div class="customer-message"><p class="message-label">Bạn</p><p class="customer-bubble">Nếu tôi không bay nữa thì có được hoàn tiền không?</p></div>
+            <div id="policy-reply"></div>
+            <div id="confirmation-region"></div>
+            <div id="policy-support-region"></div>
+          </div>
+          <div class="chat-footer"><p>Quyết định hoàn vé luôn thuộc về bạn.</p><button class="text-link" data-action="support" data-support-button><svg class="icon" aria-hidden="true"><use href="#i-support"/></svg>Gặp nhân viên <span class="principle" title="G9 — Sửa dễ dàng">G9</span></button></div>
+        </section>
+
+        <!-- Màn hình 2: lỗi có chủ ý để kiểm thử, phản hồi khách và bàn giao nhân viên. -->
+        <section id="screen-incident" class="screen card" role="tabpanel" aria-labelledby="tab-incident" hidden>
+          <div class="incident-heading"><h2><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Xử lý sự cố hoàn vé</h2><span class="pill pill-red">Tình huống giả lập</span></div>
+          <div id="incident-content" class="incident-content"></div>
+        </section>
+      </div>
+
+      <aside class="aside-column" aria-label="Thông tin đặt chỗ và trạng thái yêu cầu">
+        <section class="ticket" aria-labelledby="booking-heading">
+          <div class="ticket-top">
+            <div class="ticket-heading"><h2 id="booking-heading" class="eyebrow">Thông tin đặt chỗ</h2><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg></div>
+            <div class="booking-code">TRV-7Q2K</div>
+            <div class="ticket-route"><div class="airport"><b>HAN</b><span>Hà Nội</span></div><div class="flight-line"><svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg></div><div class="airport"><b>SGN</b><span>TP. Hồ Chí Minh</span></div></div>
+            <div class="ticket-schedule"><div><span>Chuyến bay</span><br><strong>BM 213</strong></div><div><span>Lịch bay cũ · 12/11/2026</span><br><strong>19:00</strong></div></div>
+            <p class="cancelled-banner"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg>ĐÃ HUỶ do bão</p>
+          </div>
+          <div class="ticket-bottom"><p>HÀNH KHÁCH · 02</p><div class="ticket-passenger">Nguyễn Minh An <span>34 tuổi</span></div><div class="ticket-passenger">Nguyễn Gia Bình <span>5 tuổi</span></div></div>
+        </section>
+        <section class="card status-card" aria-labelledby="request-status-heading"><h2 id="request-status-heading" class="eyebrow">Trạng thái yêu cầu</h2><div id="request-status"></div></section>
+        <div class="mini-note"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><p>Chỉ khi bạn xác nhận, trợ lý mới được gửi yêu cầu hoàn vé trong luồng bình thường.</p></div>
+      </aside>
+    </div>
+
+    <section class="autonomy" aria-label="Hai mức tự chủ của trợ lý AI">
+      <div class="autonomy-title">AI được làm gì?<p>Rõ quyền hạn. Rõ trách nhiệm.</p></div>
+      <div class="autonomy-item"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg><div><strong>TỰ ĐỘNG</strong><code>tra_cuu_dat_cho</code><p>Chỉ đọc thông tin, không thay đổi vé.</p></div></div>
+      <div class="autonomy-item"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><div><strong>CẦN KHÁCH XÁC NHẬN</strong><code>gui_yeu_cau_hoan_ve</code><p>Không được tự gửi. Gửi rồi không thể huỷ.</p></div></div>
+    </section>
+
+    <details class="audit"><summary>Nhật ký thao tác giả lập · dành cho phần trình bày</summary><ul id="audit-log"></ul></details>
+    <footer class="site-footer"><span><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>Prototype học tập · Không gửi yêu cầu thật, không kết nối API.</span><span>LAB DAY05 / T3</span></footer>
+  </main>
+
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript><p style="padding:20px;text-align:center">Vui lòng bật JavaScript để thử các tình huống của prototype.</p></noscript>
+
+  <script>
+    "use strict";
+
+    /* DỮ LIỆU GIẢ: không có fetch, API key, backend hay thư viện bên ngoài. */
+    const BOOKING = Object.freeze({
+      code: "TRV-7Q2K", flight: "BM 213", date: "12/11/2026", departure: "19:00",
+      status: "ĐÃ HUỶ do bão",
+      passengers: ["Nguyễn Minh An (34 tuổi)", "Nguyễn Gia Bình (5 tuổi)"]
+    });
+    const CUSTOMER_QUESTION = "Nếu tôi không bay nữa thì có được hoàn tiền không?";
+    const POLICY_REPLY = "Chuyến bay của bạn đã bị huỷ do bão. Theo chính sách, bạn được hoàn toàn bộ vé hoặc đổi chuyến miễn phí một lần trong 48 giờ. Tôi chưa gửi yêu cầu hoàn vé. Bạn có muốn tiếp tục quy trình hoàn tiền không?";
+    const CUSTOMER_CORRECTION = "Tôi chỉ hỏi thôi, ai bảo bạn hoàn vé?";
+    const APOLOGY = "Tôi xin lỗi vì đã gửi yêu cầu hoàn vé khi bạn chưa xác nhận. Yêu cầu đã gửi không thể tự huỷ. Tôi sẽ chuyển trường hợp này cho nhân viên hỗ trợ.";
+
+    // Một state nhỏ quản lý cả hai màn hình. Điều hướng không làm mất trạng thái gửi.
+    function createState(scenario = "happy") {
+      return {
+        screen: "policy", scenario, policyVerified: scenario !== "low",
+        policyOpen: false, confirmationOpen: false, consent: false,
+        refundSent: false, sentByMistake: false, refundTime: null,
+        corrected: false, transferred: false, transferTime: null,
+        messages: [{ speaker: "Khách", text: CUSTOMER_QUESTION }], events: []
+      };
+    }
+    let state = createState();
+    let toastTimer;
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => document.querySelectorAll(selector);
+
+    // Chỉ chèn HTML do ứng dụng tạo; mọi chuỗi dữ liệu đều được escape.
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[character]));
+    }
+    function icon(name) {
+      return `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+    }
+    function principle(code, label) {
+      return `<span class="principle" title="${code} — ${label}">${code}</span>`;
+    }
+    // Đồng hồ cố định để demo: đây KHÔNG phải thời gian xử lý hay hoàn tiền thật.
+    function logEvent(tool, description, error = false) {
+      const minute = String(state.events.length).padStart(2, "0");
+      const time = `15:${minute}:00 · 12/11/2026 (giả lập)`;
+      state.events.push({ tool, description, time, error });
+      return time;
+    }
+    function announce(message) { $("#announcement").textContent = message; }
+    function notify(message) {
+      clearTimeout(toastTimer);
+      $("#toast").textContent = message;
+      $("#toast").hidden = false;
+      toastTimer = setTimeout(() => { $("#toast").hidden = true; }, 4500);
+    }
+    function focusRegion(selector) {
+      const element = $(selector);
+      if (!element) return;
+      element.setAttribute("tabindex", "-1");
+      element.focus({ preventScroll: true });
+      element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    /* KHỞI TẠO DEMO: chỉ các nút có ghi rõ demo mới được tạo phiên khác.
+       Không có hàm nào huỷ/hoàn tác một yêu cầu đã gửi trong cùng phiên. */
+    function startScenario(scenario, showNotice = true) {
+      state = createState(scenario);
+      clearTimeout(toastTimer);
+      $("#toast").hidden = true;
+      logEvent("tra_cuu_dat_cho", "Đọc dữ liệu đặt chỗ. Không thay đổi vé.");
+      if (scenario === "low") {
+        state.messages.push({ speaker: "Trợ lý AI", text: "Hiện tôi chưa xác minh được điều kiện hoàn tiền của vé này." });
+        logEvent("kiem_tra_chinh_sach", "Thiếu dữ liệu chính sách. Chặn gửi yêu cầu hoàn vé.");
+      } else {
+        state.messages.push({ speaker: "Trợ lý AI", text: POLICY_REPLY });
+      }
+      if (scenario === "failure" || scenario === "correction") {
+        simulateWrongSend();
+        if (scenario === "correction") applyCorrection();
+      }
+      render();
+      if (showNotice) {
+        const labels = { happy: "Happy path", low: "Low-confidence", failure: "Failure", correction: "Correction" };
+        announce(`Phiên demo mới: ${labels[scenario]}. ${state.refundSent ? "Đã gửi nhầm yêu cầu, không thể huỷ." : "Chưa gửi yêu cầu hoàn vé."}`);
+      }
+    }
+
+    /* NGOẠI LỆ CỐ Ý CHO GIẢNG VIÊN: mô phỏng một hệ thống bị lỗi.
+       Luồng bình thường không gọi hàm này. Đây không phải quyền của AI. */
+    function simulateWrongSend() {
+      if (state.refundSent || state.transferred) return;
+      state.refundSent = true;
+      state.sentByMistake = true;
+      state.confirmationOpen = false;
+      state.consent = false;
+      state.screen = "incident";
+      state.refundTime = logEvent("gui_yeu_cau_hoan_ve", "LỖI MÔ PHỎNG: gửi cho cả hai hành khách khi chưa được khách xác nhận.", true);
+      state.messages.push({ speaker: "Trợ lý AI — thao tác sai", text: "Tôi đã gửi yêu cầu hoàn vé cho cả hai hành khách dù bạn chưa xác nhận." });
+    }
+
+    // G9: nhận lỗi và giữ nguyên sự thật rằng yêu cầu đã gửi không thể huỷ.
+    function applyCorrection() {
+      if (!state.sentByMistake || state.corrected) return;
+      state.corrected = true;
+      state.scenario = "correction";
+      state.messages.push({ speaker: "Khách", text: CUSTOMER_CORRECTION });
+      state.messages.push({ speaker: "Trợ lý AI", text: APOLOGY });
+      logEvent("khach_phan_hoi", "Khách phản đối; AI nhận lỗi và đề nghị chuyển nhân viên. Không huỷ yêu cầu.");
+    }
+
+    // G10: kiểm tra điều kiện tại hàm xử lý, không chỉ dựa vào nút bị disabled.
+    function submitRefund() {
+      if (!state.policyVerified || !state.confirmationOpen || !state.consent || state.refundSent || state.transferred) {
+        notify("Chỉ gửi khi đã xác minh chính sách và bạn xác nhận rõ cho cả hai hành khách.");
+        return false;
+      }
+      state.refundSent = true;
+      state.confirmationOpen = false;
+      state.refundTime = logEvent("gui_yeu_cau_hoan_ve", "Khách đã xác nhận hoàn vé cho cả hai hành khách. Yêu cầu đã gửi, không thể huỷ.");
+      state.messages.push({ speaker: "Khách", text: "Tôi xác nhận gửi yêu cầu hoàn vé cho Nguyễn Minh An và Nguyễn Gia Bình; tôi hiểu yêu cầu không thể huỷ." });
+      state.messages.push({ speaker: "Trợ lý AI", text: "Đã gửi yêu cầu hoàn vé. Yêu cầu không thể huỷ. Chưa có dữ liệu về số tiền cụ thể hoặc thời điểm tiền về." });
+      render();
+      announce("Đã gửi yêu cầu hoàn vé sau khi khách xác nhận. Không thể huỷ yêu cầu.");
+      focusRegion("#refund-result");
+      return true;
+    }
+
+    function transferToStaff() {
+      if (state.transferred) return;
+      if (state.sentByMistake) applyCorrection();
+      state.transferred = true;
+      state.confirmationOpen = false;
+      state.consent = false;
+      state.transferTime = logEvent("chuyen_nhan_vien", state.sentByMistake
+        ? "Bàn giao mã đặt chỗ, lịch sử tin nhắn và thao tác gửi nhầm. Yêu cầu hoàn vẫn không thể huỷ."
+        : "Bàn giao mã đặt chỗ và lịch sử tin nhắn để nhân viên hỗ trợ.");
+      render();
+      announce("Đã chuyển nhân viên hỗ trợ trong phiên giả lập.");
+      focusRegion(state.screen === "incident" ? "#incident-handoff" : "#policy-handoff");
+    }
+
+    /* HÀM RENDER: chỉ thay đổi nội dung bên trong hai màn hình đã có sẵn. */
+    function renderPolicy() {
+      const reply = $("#policy-reply");
+      if (!state.policyVerified) {
+        reply.innerHTML = `<div class="reply-leading">${icon("spark")} MÂY · TRỢ LÝ AI</div>
+          <div class="low-confidence"><h3>${icon("info")}Chưa xác minh được chính sách ${principle("G10", "Thu hẹp phạm vi khi nghi ngờ")}</h3>
+          <p>Hiện tôi chưa xác minh được điều kiện hoàn tiền của vé này. Tôi sẽ không tự đoán chính sách hoặc gửi yêu cầu hoàn vé.</p>
+          <p style="margin-top:9px">Thông tin chuyến bị huỷ đã có trong đặt chỗ; dữ liệu chính sách hiện chưa truy xuất được trong tình huống mô phỏng này.</p>
+          <div class="actions"><button class="btn btn-primary" data-action="retry" ${state.transferred ? "disabled" : ""}>${icon("reset")}Thử lại</button><button class="btn btn-secondary" data-action="support" data-support-button ${state.transferred ? "disabled" : ""}>${icon("support")}Gặp nhân viên</button></div></div>
+          <p class="safety-note">${icon("shield")}Chưa gửi yêu cầu hoàn vé. Không cho phép hoàn khi chưa xác minh.</p>`;
+      } else {
+        reply.innerHTML = `<div class="reply-leading">${icon("spark")} MÂY · TRỢ LÝ AI ${state.refundSent ? '<span class="muted">· Trả lời ban đầu</span>' : ""}</div>
+          <p class="ai-bubble">${POLICY_REPLY}</p>
+          <div class="policy-benefits"><div class="benefit">${icon("refund")}<div><strong>Hoàn toàn bộ vé</strong><small>Bạn chủ động chọn hoàn</small></div></div><div class="benefit">${icon("swap")}<div><strong>Đổi miễn phí 1 lần</strong><small>Trong vòng 48 giờ</small></div></div></div>
+          <div class="evidence"><div class="evidence-heading"><span>Căn cứ của câu trả lời</span>${principle("G11", "Giải thích vì sao")}</div><p><strong>TRV-7Q2K · BM 213:</strong> chuyến đã huỷ do bão.<br>Nguồn: dữ liệu đặt chỗ và chính sách hãng Bay Mẫu (giả lập).</p></div>
+          ${!state.refundSent ? `<p class="safety-note">${icon("shield")}Chưa gửi yêu cầu hoàn vé. Chỉ bạn mới có thể xác nhận. ${principle("G10", "Thu hẹp phạm vi khi nghi ngờ")}</p>` : ""}
+          <div class="actions"><button class="btn btn-secondary" data-action="policy" aria-expanded="${state.policyOpen}" aria-controls="policy-detail">${icon("info")}${state.policyOpen ? "Ẩn chính sách" : "Xem chính sách"}</button>
+          ${!state.refundSent ? `<button class="btn btn-primary" data-action="continue" ${state.transferred ? "disabled" : ""}>Tiếp tục hoàn vé ${icon("arrow")}</button>` : ""}</div>
+          ${state.policyOpen ? `<section id="policy-detail" class="policy-detail"><h3>Chính sách hãng Bay Mẫu</h3><ul><li>Chuyến BM 213 đã huỷ do bão: được hoàn toàn bộ vé <strong>hoặc</strong> đổi chuyến miễn phí một lần trong 48 giờ.</li><li>Huỷ do bão không được bồi thường tiền mặt.</li><li>Gửi yêu cầu hoàn vé rồi sẽ không thể huỷ.</li><li>Dữ liệu không cung cấp số tiền cụ thể hoặc thời điểm tiền về; trợ lý không cam kết các thông tin này.</li></ul><p class="small">Nguồn giả lập: thông tin đặt chỗ TRV-7Q2K và chính sách hãng Bay Mẫu.</p></section>` : ""}`;
+      }
+
+      const confirmation = $("#confirmation-region");
+      if (state.refundSent) {
+        confirmation.innerHTML = state.sentByMistake
+          ? `<div class="error-banner" style="margin:20px 0 0"><h3>${icon("alert")}Yêu cầu đã bị gửi nhầm</h3><p>Đã gửi yêu cầu hoàn vé — Không thể huỷ. Thông tin “chưa gửi” phía trên là câu trả lời ban đầu, trước sự cố.</p><button class="text-link" data-screen="incident">Xem sự cố và chuyển nhân viên ${icon("arrow")}</button></div>`
+          : `<section id="refund-result" class="result-box"><h3>${icon("check")}Đã gửi yêu cầu hoàn vé</h3><p>Yêu cầu cho <strong>Nguyễn Minh An và Nguyễn Gia Bình</strong> đã được gửi sau khi bạn xác nhận. <strong>Không thể huỷ yêu cầu.</strong></p><p>Đây là xác nhận gửi yêu cầu, không phải xác nhận tiền đã hoàn. Chưa có dữ liệu về số tiền cụ thể hoặc thời điểm tiền về.</p><p class="small">Thời điểm thao tác: ${escapeHTML(state.refundTime)}.</p></section>`;
+      } else if (state.confirmationOpen && state.policyVerified && !state.transferred) {
+        confirmation.innerHTML = `<section id="refund-confirmation" class="inline-panel" aria-labelledby="confirmation-title"><div class="panel-heading"><h3 id="confirmation-title">Xác nhận hoàn vé</h3>${principle("G10", "Thu hẹp phạm vi khi nghi ngờ")}</div>
+          <p>Đặt chỗ <strong>TRV-7Q2K</strong> · BM 213 · 19:00 ngày 12/11/2026.<br>Yêu cầu áp dụng cho <strong>cả hai hành khách</strong>:</p>
+          <ul class="passenger-list"><li>${icon("user")}<span>Nguyễn Minh An <small>· 34 tuổi</small></span></li><li>${icon("user")}<span>Nguyễn Gia Bình <small>· 5 tuổi</small></span></li></ul>
+          <p class="warning">${icon("alert")}<span><strong>Gửi yêu cầu hoàn vé rồi sẽ không thể huỷ.</strong><br>Hãy kiểm tra kỹ lựa chọn trước khi xác nhận.</span></p>
+          <label class="consent-label"><input id="refund-consent" type="checkbox" ${state.consent ? "checked" : ""}><span>Tôi xác nhận hoàn vé cho <strong>cả Nguyễn Minh An và Nguyễn Gia Bình</strong> và hiểu rằng yêu cầu đã gửi không thể huỷ.</span></label>
+          <div class="actions"><button class="btn btn-secondary" data-action="back">${icon("back")}Quay lại</button><button id="confirm-submit" class="btn btn-primary" data-action="confirm" aria-describedby="confirmation-help" ${state.consent ? "" : "disabled"}>${icon("lock")}Xác nhận gửi yêu cầu</button></div>
+          <p id="confirmation-help" class="confirm-help">${state.consent ? "Bạn đã xác nhận đủ hai hành khách. Bấm nút gửi để hoàn tất thao tác mô phỏng." : "Tích ô xác nhận để bật nút gửi. Chưa có yêu cầu nào được gửi."}</p></section>`;
+      } else { confirmation.innerHTML = ""; }
+      $("#policy-support-region").innerHTML = state.transferred ? handoffMarkup("policy-handoff") : "";
+    }
+
+    function handoffMarkup(id) {
+      const history = state.messages.map((message) => `<li><strong>${escapeHTML(message.speaker)}:</strong> ${escapeHTML(message.text)}</li>`).join("");
+      return `<section id="${id}" class="support-box"><h3>${icon("support")}Đã chuyển nhân viên hỗ trợ</h3><p>Đã bàn giao các thông tin bên dưới trong phiên giả lập. Không có cam kết về thời gian xử lý hoặc khả năng huỷ yêu cầu hoàn.</p>
+        <dl class="handoff-data"><dt>Đặt chỗ & hành khách</dt><dd><strong>${BOOKING.code}</strong> · ${BOOKING.flight}<br>${BOOKING.passengers.map(escapeHTML).join("<br>")}</dd>
+        <dt>Trạng thái yêu cầu hoàn</dt><dd>${state.refundSent ? "Đã gửi yêu cầu hoàn vé — Không thể huỷ" : "Chưa gửi yêu cầu hoàn vé"}</dd>
+        <dt>Thao tác cần hỗ trợ</dt><dd>${state.sentByMistake ? `<code>gui_yeu_cau_hoan_ve</code> đã bị gọi khi khách chưa xác nhận.<br>${escapeHTML(state.refundTime)}` : state.refundSent ? "Khách đã xác nhận và gửi yêu cầu. Cần nhân viên hỗ trợ thêm thông tin." : state.policyVerified ? "Khách muốn được nhân viên tư vấn, chưa yêu cầu gửi hoàn vé." : "Chưa xác minh được dữ liệu chính sách; không gửi hoàn vé."}</dd>
+        <dt>Lịch sử tin nhắn</dt><dd><ol>${history}</ol></dd>
+        <dt>Thời điểm bàn giao giả lập</dt><dd>${escapeHTML(state.transferTime)}</dd></dl></section>`;
+    }
+
+    function renderIncident() {
+      const container = $("#incident-content");
+      if (!state.sentByMistake) {
+        const canSimulate = !state.refundSent && !state.transferred;
+        container.innerHTML = `<div class="empty-incident"><div class="empty-icon">${icon("shield")}</div><h3>Một sai sót. Một cách xử lý rõ ràng.</h3><p>${canSimulate ? "Thử tình huống AI hiểu câu hỏi thành lệnh hoàn vé. Chỉ nút mô phỏng bên dưới mới cố ý bỏ qua bước xác nhận để kiểm tra cách xử lý lỗi." : "Phiên hiện tại đã gửi yêu cầu có xác nhận hoặc đã chuyển nhân viên. Chọn Failure ở thanh demo để bắt đầu một phiên lỗi riêng."}</p><button class="btn btn-danger" data-action="simulate" ${canSimulate ? "" : "disabled"}>${icon("alert")}Mô phỏng AI gửi nhầm</button><div class="simulation-label">Chỉ dành cho kiểm thử · Không phải hành vi AI được phép thực hiện</div><button class="text-link" style="margin-top:13px" data-screen="policy">${icon("back")}Trở về chính sách & xác nhận</button></div>`;
+        return;
+      }
+      container.innerHTML = `<section class="error-banner" role="alert"><h3>${icon("alert")}AI đã gửi yêu cầu khi bạn chưa xác nhận</h3><p><strong>Đã gửi yêu cầu hoàn vé — Không thể huỷ.</strong><br>Đây là lỗi của hệ thống, không phải lỗi của bạn.</p></section>
+        <div class="error-transcript"><div class="customer-message"><p class="message-label">Bạn · Câu hỏi ban đầu</p><p class="customer-bubble">${CUSTOMER_QUESTION}</p></div><div class="wrong-response"><small>TRỢ LÝ AI · HÀNH ĐỘNG SAI ĐƯỢC MÔ PHỎNG</small>Tôi đã gửi yêu cầu hoàn vé cho cả hai hành khách dù bạn chưa xác nhận.</div>
+        ${state.corrected ? `<div class="customer-message"><p class="message-label">Bạn · Phản hồi sửa lỗi</p><p class="customer-bubble">${CUSTOMER_CORRECTION}</p></div><div class="correction-response"><p class="message-label">${icon("spark")}Trợ lý AI · Nhận lỗi và giải thích</p><p>${APOLOGY}</p></div>` : `<button class="complaint-button" data-action="correct"><small>BẤM ĐỂ MÔ PHỎNG PHẢN HỒI CỦA KHÁCH</small>“${CUSTOMER_CORRECTION}” ${icon("arrow")}</button>`}</div>
+        <section class="incident-evidence"><h3>Bằng chứng thao tác ${principle("G11", "Giải thích vì sao")}</h3><dl style="margin:0"><div class="evidence-row"><dt>Tool đã gọi</dt><dd><code>gui_yeu_cau_hoan_ve</code></dd></div><div class="evidence-row"><dt>Xác nhận của khách</dt><dd style="color:var(--red)">Chưa có — vi phạm bước xác nhận</dd></div><div class="evidence-row"><dt>Trạng thái thực tế</dt><dd>Đã gửi · Không thể huỷ</dd></div><div class="evidence-row"><dt>Thời điểm thao tác</dt><dd>${escapeHTML(state.refundTime)}</dd></div></dl></section>
+        <div class="actions"><button class="btn btn-primary" data-action="support" data-support-button ${state.transferred ? "disabled" : ""}>${icon("support")}${state.transferred ? "Đã chuyển nhân viên hỗ trợ" : "Gặp nhân viên"}</button><button class="btn btn-secondary" data-screen="policy">${icon("back")}Về màn hình 1</button></div>
+        <p class="incident-footnote">${principle("G9", "Sửa dễ dàng")} Xem trạng thái thật và nhờ người hỗ trợ. Nhân viên không được hứa huỷ một yêu cầu không thể huỷ.</p>
+        ${state.transferred ? handoffMarkup("incident-handoff") : ""}`;
+    }
+
+    function renderStatus() {
+      const statusText = state.refundSent ? "Đã gửi yêu cầu hoàn vé — Không thể huỷ" : "Chưa gửi yêu cầu hoàn vé";
+      $("#request-status").innerHTML = `<p class="status-value ${state.sentByMistake ? "is-error" : ""}">${icon(state.sentByMistake ? "alert" : state.refundSent ? "check" : "shield")}<span>${statusText}</span></p><p class="status-description">${state.transferred ? "Đã chuyển nhân viên hỗ trợ. Trạng thái yêu cầu hoàn vé ở trên được giữ nguyên." : state.sentByMistake ? "Lỗi giả lập: AI đã bỏ qua bước xác nhận. Cần nhân viên hỗ trợ." : state.refundSent ? "Đã có xác nhận của khách. Chưa có dữ liệu về thời điểm tiền về." : state.policyVerified ? "AI đang hỗ trợ thông tin. Vé chưa bị thay đổi." : "Thiếu dữ liệu chính sách. Thao tác hoàn vé đã bị chặn."}</p>`;
+    }
+
+    function render() {
+      renderPolicy(); renderIncident(); renderStatus();
+      $$("[data-scenario]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.scenario === state.scenario)));
+      $$(".screen-tab").forEach((tab) => {
+        const active = tab.dataset.screen === state.screen;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      $("#screen-policy").hidden = state.screen !== "policy";
+      $("#screen-incident").hidden = state.screen !== "incident";
+      $$("[data-support-button]").forEach((button) => {
+        button.disabled = state.transferred;
+        if (state.transferred) button.setAttribute("aria-label", "Đã chuyển nhân viên hỗ trợ");
+        else button.removeAttribute("aria-label");
+      });
+      $("#audit-log").innerHTML = state.events.map((event) => `<li><time>${escapeHTML(event.time)}</time><div><code class="${event.error ? "event-error" : ""}">${escapeHTML(event.tool)}</code><p>${escapeHTML(event.description)}</p></div></li>`).join("");
+    }
+
+    /* SỰ KIỆN: event delegation giúp các nút vừa render vẫn hoạt động.
+       Không gắn hành động thật với câu hỏi chính sách của khách. */
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button || button.disabled) return;
+      if (button.dataset.scenario) {
+        startScenario(button.dataset.scenario);
+        return;
+      }
+      if (button.dataset.screen) {
+        state.screen = button.dataset.screen;
+        render();
+        const tab = $(`#tab-${state.screen}`);
+        tab.focus({ preventScroll: true });
+        announce(state.screen === "policy" ? "Màn hình 1: Chính sách và xác nhận." : "Màn hình 2: Xử lý khi AI sai.");
+        return;
+      }
+      switch (button.dataset.action) {
+        case "reset": startScenario("happy"); notify("Đã bắt đầu phiên demo mới. Không phải huỷ yêu cầu của phiên trước."); break;
+        case "policy": state.policyOpen = !state.policyOpen; render(); $("[data-action='policy']").focus({ preventScroll: true }); break;
+        case "continue":
+          if (!state.policyVerified || state.refundSent || state.transferred) return;
+          state.confirmationOpen = true; state.consent = false; render();
+          focusRegion("#refund-confirmation"); announce("Kiểm tra cả hai hành khách và xác nhận trước khi gửi yêu cầu."); break;
+        case "back": state.confirmationOpen = false; state.consent = false; render(); $("[data-action='continue']")?.focus({ preventScroll: true }); break;
+        case "confirm": submitRefund(); break;
+        case "retry":
+          if (state.transferred || state.refundSent) return;
+          state.policyVerified = true; state.scenario = "happy";
+          state.messages.push({ speaker: "Trợ lý AI", text: POLICY_REPLY });
+          logEvent("tra_cuu_dat_cho", "Thử lại thành công trong demo; đã xác minh chính sách. Chưa gửi yêu cầu hoàn.");
+          render(); notify("Đã lấy lại dữ liệu giả lập. Bạn có thể xem chính sách và tự quyết định.");
+          $("[data-action='policy']")?.focus({ preventScroll: true }); break;
+        case "simulate":
+          if (state.refundSent || state.transferred) return;
+          state.scenario = "failure"; simulateWrongSend(); render();
+          announce("Lỗi mô phỏng: AI đã gửi yêu cầu hoàn vé khi chưa có xác nhận. Không thể huỷ.");
+          focusRegion("#screen-incident"); break;
+        case "correct": applyCorrection(); render(); announce(APOLOGY); focusRegion(".correction-response"); break;
+        case "support": transferToStaff(); break;
+      }
+    });
+
+    document.addEventListener("change", (event) => {
+      if (event.target.id !== "refund-consent") return;
+      state.consent = event.target.checked;
+      $("#confirm-submit").disabled = !state.consent;
+      $("#confirmation-help").textContent = state.consent
+        ? "Bạn đã xác nhận đủ hai hành khách. Bấm nút gửi để hoàn tất thao tác mô phỏng."
+        : "Tích ô xác nhận để bật nút gửi. Chưa có yêu cầu nào được gửi.";
+    });
+
+    // Điều hướng tab bằng bàn phím theo thông lệ truy cập: trái/phải, Home/End.
+    $(".screen-nav").addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      state.screen = event.key === "Home" ? "policy" : event.key === "End" ? "incident" : state.screen === "policy" ? "incident" : "policy";
+      render(); $(`#tab-${state.screen}`).focus();
+    });
+
+    startScenario("happy", false);
+  </script>
+</body>
+</html>
