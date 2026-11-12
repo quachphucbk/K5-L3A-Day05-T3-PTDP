@@ -83,6 +83,80 @@ Với mỗi tool:
 - Luật thêm hoặc tool tách bước (nếu có), và vì sao.
 - Một mức tự chủ đã đổi lời hứa nào với người dùng.
 
+### 4.1. Mức cho từng tool và lý do
+
+Ba mức: **tự làm**, **cần người duyệt**, **cấm**. Điều kiện đi kèm là ràng buộc bắt buộc, không phải quyền để AI tự bỏ qua khi khách đang gấp.
+
+| Tool | Mức của nhóm | Sai thì ai chịu gì, đảo lại được không? | Chờ người thì mất gì? | Phương án đã cân nhắc và lý do loại |
+|---|---|---|---|---|
+| `tra_cuu_dat_cho` | **Tự làm** trong đặt chỗ đang mở | Chỉ đọc, không thay đổi vé. Đọc thiếu hoặc dùng dữ liệu cũ khiến khách chọn sai; cần hiện thời điểm tra cứu và kiểm tra lại trước giao dịch | Khách phải chờ để biết chuyến bị huỷ và lựa chọn còn chỗ, không tạo thêm an toàn cho một thao tác chỉ đọc | Loại cần duyệt mỗi lần tra cứu vì thêm bước không cần thiết; loại cấm vì không có căn cứ để hỗ trợ khách |
+| `giu_cho_chuyen_moi` | **Tự làm có điều kiện:** đã rõ chuyến và hành khách, đủ chỗ, không tạo ca trẻ bay một mình | Giữ sai làm khách hiểu nhầm hoặc giữ chỗ không cần thiết, nhưng chưa đổi vé, chưa dùng lần đổi miễn phí; giữ chỗ tự nhả sau 20 phút | Chuyến phù hợp có thể hết chỗ trong lúc chờ một lượt duyệt riêng, nhất là BM 205 chỉ còn 4 chỗ | Loại tự giữ nhiều chuyến hoặc giữ từ câu “9h” còn mơ hồ; loại yêu cầu thêm một lượt duyệt riêng sau khi khách đã chọn rõ chuyến vì giữ chỗ có thời hạn và chưa đổi vé |
+| `doi_chuyen_bay` | **Cần khách duyệt** một giao dịch cụ thể | Khách mất lần đổi miễn phí duy nhất; chuyến muốn đổi lại có thể hết chỗ. Khó đảo lại; không có tool hoàn tác trong bảng | Chờ có thể mất chỗ, nên dùng giữ chỗ 20 phút để khách có thời gian kiểm tra. Không vì sắp hết hạn mà tự đổi | Loại tự làm vì câu “ok” có thể chưa rõ giờ/ngày/người; loại cấm toàn bộ vì khách vẫn cần hoàn thành đổi vé khi đã xác nhận đủ |
+| `gui_yeu_cau_hoan_ve` | **Cần khách duyệt riêng**, chỉ khi thông tin hoàn đã đủ và có căn cứ | Khách mất lựa chọn giữ vé để tiếp tục đổi theo ý định cũ; yêu cầu gửi rồi không huỷ được. Thời gian hoàn có thể kéo dài; không hứa tiền về ngay | Chậm gửi hoàn, nhưng cần đổi lấy việc khách hiểu hậu quả không rút lại được. Với câu chỉ hỏi chính sách, không có lý do phải gửi ngay | Loại tự làm vì hỏi “có được hoàn không” không phải yêu cầu gửi. Loại cấm mọi ca vì khách vẫn có quyền yêu cầu hoàn; nhưng fixture hiện thiếu thông tin hoàn cụ thể thì phải chuyển nhân viên trước khi gửi |
+| `chuyen_nhan_vien` | **Tự làm** khi khách yêu cầu hoặc gặp ca bắt buộc: đổi tên, trẻ bay một mình, lỗi giao dịch không tự sửa được | Có thể làm khách chờ và phải đổi kênh hỗ trợ; chuyển cuộc chat là thao tác đảo được. Gửi kèm ngữ cảnh cần thiết để tránh bắt khách kể lại | Trì hoãn hỗ trợ khiến ca khó kéo dài; nhưng chuyển mọi việc đơn giản cũng có thể làm khách mất chuyến phù hợp | Loại cấm vì cần đường xử lý ngoài thẩm quyền; loại chuyển mọi ca vì tra cứu, giữ chỗ và xác nhận rõ có thể xử lý trực tiếp |
+
+### 4.2. Ai duyệt, được xem gì, quá hạn thì sao?
+
+| Giao dịch | Ai duyệt? | Thông tin bắt buộc trước khi duyệt | Không duyệt hoặc quá hạn |
+|---|---|---|---|
+| Đổi chuyến | Khách đang thao tác đặt chỗ | Mã đặt chỗ; chuyến cũ và mới; tuyến bay; ngày, giờ theo định dạng 24 giờ; tên từng hành khách; đủ số chỗ; thời hạn giữ chỗ; cảnh báo dùng lần đổi miễn phí duy nhất | Không đổi. Hết 20 phút thì giữ chỗ tự nhả, nút xác nhận cũ hết hiệu lực; tra cứu/giữ lại và yêu cầu duyệt mới |
+| Gửi yêu cầu hoàn | Khách, bằng xác nhận riêng cho việc gửi hoàn | Hành khách nào được hoàn; quyền lợi/số tiền nếu đã xác minh; phương thức nhận tiền; thời gian xử lý theo nguồn có căn cứ; cảnh báo “Gửi rồi không huỷ được yêu cầu” | Không gửi nếu chưa xác nhận hoặc đóng màn hình. Nếu thông tin/đối tượng hoàn thay đổi thì xác nhận cũ hết hiệu lực; không tự suy ra một hạn hoàn từ giới hạn 48 giờ dành cho đổi chuyến |
+
+**Giới hạn dữ liệu hiện tại:** fixture chỉ ghi được hoàn toàn bộ, không cho số tiền thanh toán, phương thức thanh toán và thời hạn hoàn cụ thể của TRV-7Q2K. Mục “Sản phẩm thật hôm nay” nêu có thể tới 90 ngày và có trường hợp voucher, không đủ để khẳng định kết quả riêng của đặt chỗ này. Vì vậy, bản thiết kế với fixture hiện tại **giải thích quyền hoàn rồi chuyển nhân viên để làm rõ**, chưa gọi tool gửi hoàn. Không thêm số tiền hoặc hạn trả giả như thể đã được xác minh.
+
+### 4.3. Tool khó xếp nhất: `giu_cho_chuyen_moi`
+
+**Cái giá của hai phía:**
+
+- Nếu mọi lần giữ đều cần thêm lượt duyệt: có thể mất chỗ trong lúc khách đọc và trả lời; BM 205 chỉ còn 4 chỗ (§2, dòng “Ok lấy chuyến 9h nhé”).
+- Nếu AI tự chọn và giữ từ tin mơ hồ: có thể giữ BM 217 lúc 21:00 dù khách muốn BM 205 lúc 09:30; BM 217 còn 1 chỗ, không đủ cho hai người (§2, dòng 3–4).
+- Nếu cấm giữ chỗ: khách phải quyết định đổi trong khi chỗ có thể biến động, bỏ phí một tool có thể tự hết hạn mà chưa đổi vé.
+
+**Phương án lựa chọn cho từng thành viên đối với `giu_cho_chuyen_moi`:**
+
+| Thành viên | Phương án lựa chọn | Lý do và kịch bản làm căn cứ |
+|---|---|---|
+| Quách Ngọc Phúc | **Tự làm có điều kiện** | Sau khi rõ chuyến và hành khách, AI kiểm tra đủ chỗ rồi tự giữ. Ở ca “Ok lấy chuyến 9h nhé” (§2 dòng 4), phải hỏi rõ trước; khi khách chọn BM 205 cho cả hai thì giữ ngay để giảm nguy cơ mất 2 trong 4 chỗ còn lại |
+| Hồ Quốc Toản | **Cần khách duyệt trước khi giữ** | Ưu tiên khách chủ động chọn đúng chuyến/người. Ca “9h” có thể bị hiểu sai; một nút “Giữ 2 chỗ BM 205 · 09:30 · 13/11” giúp xác nhận rõ. Đổi lại, thêm một lượt thao tác có thể làm mất chỗ |
+| Bùi Anh Dũng | **Tự làm có điều kiện** | Giữ chỗ chưa đổi vé, chưa mất lần đổi miễn phí và tự nhả sau 20 phút nên có thể chủ động sau khi đủ dữ liệu. Ca “sớm nhất còn chỗ” (§2 dòng 3) phải chặn BM 217 vì chỉ còn 1 chỗ; chỉ giữ khi khách đã chọn rõ chuyến đủ cho cả hai |
+| Lê Minh Phụng | **Cần khách duyệt trước khi giữ** | Ưu tiên tránh nhầm “đã giữ” với “đã đổi” và tránh giữ phương án khách chưa muốn. Ca hỏi hoàn tiền (§2 dòng 2) cho thấy không nên suy ra yêu cầu hành động từ câu hỏi; cần làm rõ ý định và hiển thị thao tác cụ thể. Đổi lại, duyệt riêng mọi lần giữ có thể gây chậm không cần thiết |
+
+**Quyết định chốt trong thiết kế:** chọn **tự làm có điều kiện** sau khi khách chọn rõ chuyến và hành khách; không cần thêm một lượt duyệt giữ riêng. Trước khi rõ thì chỉ hỏi, không giữ theo suy đoán. Sau khi giữ, hiển thị “Đã giữ 2 chỗ — chưa đổi vé”, thời hạn 20 phút và bước xác nhận đổi riêng. Cách này giữ tốc độ của phương án tự làm và yêu cầu rõ ý định của phương án cần duyệt.
+
+**Vì sao chốt mức này:** yêu cầu khách chọn rõ chuyến/người đã giải quyết phần mơ hồ mà phía cần duyệt lo ngại; thêm một nút duyệt giữ riêng sau đó ít tạo thêm bảo vệ nhưng làm tăng thời gian chờ. Giữ chỗ tự hết sau 20 phút và chưa dùng lần đổi miễn phí, nên mức tự làm có điều kiện phù hợp hơn cấm hoặc duyệt mọi lần. Hành động khó đảo là đổi vé vẫn cần xác nhận riêng.
+
+**Áp dụng vào §2:** với “Ok lấy chuyến 9h nhé” (dòng 4), chưa giữ khi giờ còn mơ hồ; với “sớm nhất còn chỗ” (dòng 3), không giữ BM 217 cho hai người vì thiếu chỗ; với câu hỏi hoàn tiền (dòng 2), chỉ giải thích, không tự giữ hay gửi hoàn vì khách chưa yêu cầu giao dịch đó.
+
+### 4.4. Thử mức tự chủ trên hai ca đắt nhất và một ca bình thường
+
+Đây là **walkthrough của thiết kế**, chưa phải kết quả chạy prototype.
+
+| Ca | AI làm gì và khách thấy gì? | Cái sai có bị chặn không? | Có làm khi lẽ ra phải hỏi không? | Khách bình thường có chờ vô ích không? |
+|---|---|---|---|---|
+| **Đắt nhất #1:** “Nếu tôi không bay nữa thì có được hoàn tiền không?” | Trả lời được hoàn toàn bộ theo chính sách dựng, ghi “Chưa gửi yêu cầu hoàn”. Phân biệt nút “Tìm hiểu hoàn vé” với xác nhận gửi. Nếu khách muốn gửi, fixture còn thiếu chi tiết thì chuyển nhân viên để làm rõ | Có: không gọi `gui_yeu_cau_hoan_ve` từ một câu hỏi chính sách | Không. Hỏi rõ ý định trước khi chuyển sang luồng giao dịch; không suy ra hỏi là đồng ý gửi | Câu hỏi chính sách được trả lời ngay, không cần chờ nhân viên. Chỉ chờ khi thực sự yêu cầu hoàn nhưng thiếu dữ liệu |
+| **Đắt nhất #2:** “Ok lấy chuyến 9h nhé.” | Hỏi lại: “Bạn muốn nói 21:00 ngày 12/11 hay 09:30 ngày 13/11?” Nêu 21:00 chỉ còn 1 chỗ, không đủ cả hai. Khách chọn rõ BM 205 cho An và Bình thì kiểm tra/giữ 2 chỗ, hiện bản xác nhận đổi riêng | Có: câu “ok” không kích hoạt đổi; luật đủ chỗ ngăn đổi cả hai vào chuyến chỉ còn 1 chỗ | Không tự giữ hoặc đổi khi giờ/người còn mơ hồ. Không khẳng định 09:30 là đúng ý khách chỉ vì 21:00 không đủ chỗ | Chỉ thêm bước hỏi cần thiết; khi đã rõ thì tự giữ, không phải chờ nhân viên |
+| **Bình thường:** “Giữ giúp tôi BM 205 lúc 09:30 ngày 13/11 cho cả An và Bình.” | Tra cứu, kiểm tra còn đủ 2 chỗ, gọi giữ chỗ; hiện đếm ngược và nhãn chưa đổi. Nếu muốn đổi, khách xem và bấm xác nhận giao dịch cụ thể | Có: giữ chỗ không dùng lần đổi miễn phí; không đổi trước khi duyệt | Không. Thông tin giữ đã đủ, nhưng chưa suy ra khách đã cho phép đổi | Không thêm lượt duyệt riêng cho tra cứu/giữ; chỉ duyệt ở bước thay đổi vé khó đảo |
+
+### 4.5. Luật bổ sung và tách bước
+
+1. **Tách hỏi quyền lợi → chuẩn bị giao dịch → thực hiện giao dịch.** Hai bước đầu là trạng thái giao diện, không tự tạo thêm tool có quyền gửi. Chỉ bước cuối mới gọi đổi/hoàn sau xác nhận hợp lệ. Chặn ca đắt nhất #1.
+2. **Không dùng một câu “ok” làm quyền chung.** Xác nhận phải gắn với loại thao tác, mã đặt chỗ, mã chuyến/ngày/giờ và từng hành khách; thay đổi thông tin thì phải duyệt lại. Chặn ca đắt nhất #2.
+3. **Đủ chỗ cho toàn bộ hành khách được chọn.** Không tự tách đặt chỗ chỉ để vừa số chỗ; chọn trẻ 5 tuổi bay một mình thì chuyển người. Chặn §2 dòng 1 và 3.
+4. **Giữ chỗ không phải đổi vé.** Chỉ hiển thị đã giữ sau kết quả tool; hết hạn không tự đổi. Không có tool huỷ giữ ngay thì chỉ thông báo tự nhả sau 20 phút, không tạo nút hoàn tác giả.
+5. **Dữ liệu mới và xác nhận còn hiệu lực.** Trước đổi phải kiểm tra giữ chỗ/điều kiện còn đúng; nếu đã thay đổi thì dừng và hiển thị lại cho khách duyệt.
+6. **Không cấp quyền từ tin nhắn.** Tự xưng nhân viên hoặc yêu cầu gấp không bỏ được bước xác nhận, luật số chỗ hay giới hạn tool. Chặn §2 dòng 6.
+7. **Chặn giao dịch lặp và xử lý kết quả không rõ.** Khi đang gửi thì khoá bấm lặp. Chưa biết kết quả thì tra cứu/kiểm tra, không tự gửi lại đổi/hoàn. Không báo thành công trước kết quả; sai lệch sau giao dịch thì dừng và chuyển nhân viên kèm xác nhận/kết quả.
+8. **Chuyển người minh bạch.** Ghi rõ lý do, thông tin chuyển và trạng thái. Chỉ báo “Đã chuyển” sau khi tool thành công; thất bại thì nói chưa chuyển được. Chưa có SLA nên không hứa nhân viên phản hồi trong một số phút cụ thể.
+
+### 4.6. Mức tự chủ làm thay đổi lời hứa với người dùng
+
+Vì `doi_chuyen_bay` cần khách duyệt, lời hứa của tính năng là:
+
+> “Tôi giúp bạn tìm và giữ chuyến phù hợp. Tôi chỉ đổi vé sau khi bạn xác nhận rõ chuyến và hành khách. Với yêu cầu hoàn, tôi giải thích hậu quả và chỉ gửi sau xác nhận riêng khi thông tin đã đủ; nếu thiếu, tôi chuyển nhân viên hỗ trợ.”
+
+Lời hứa này hiện thành trạng thái cụ thể: **chưa đổi → đã giữ, chưa đổi → chờ xác nhận → đang xử lý → đã đổi**, hoặc **chưa gửi hoàn → cần bổ sung thông tin/chờ xác nhận → đang gửi → đã gửi**. Các trạng thái kết quả chỉ xuất hiện khi có kết quả tool tương ứng.
+
+
 ## §5. Prototype (chặng 5)
 
 - Link hoặc file · công cụ · phần nào mock · có lời gọi AI thật không.
