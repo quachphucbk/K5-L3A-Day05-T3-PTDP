@@ -32,65 +32,67 @@
 
 ## §3. Khi AI sai  (chặng 3)
 
+
 ## Kịch bản — AI tự ý hoàn vé khi khách chưa xác nhận
 
 - Tin người dùng: "Nếu tôi không bay nữa thì có được hoàn tiền không?"
 - Lớp: ④ Đặc thù domain.
-- Lỗi: AI tự gọi `gui_yeu_cau_hoan_ve` dù khách chỉ đang hỏi thông tin.
+- Tên lỗi: Biến câu hỏi thành hành động không thể hoàn tác.
+- AI có thể sai: Tự gọi `gui_yeu_cau_hoan_ve` dù khách chỉ hỏi thông tin.
+- Bằng chứng: Tool `gui_yeu_cau_hoan_ve` gửi yêu cầu hoàn vé, sau khi gửi không thể huỷ.
 - Nhãn: Không chấp nhận được.
 
 ### 1. Khi AI không chắc, nên làm gì?
 
 - Chọn: Trả lời kèm giới hạn.
-- AI giải thích chính sách hoàn vé nhưng không tự gửi yêu cầu.
-- Không cần hỏi lại ngay vì khách chỉ hỏi về quyền hoàn tiền.
-- Không cần chuyển nhân viên vì chính sách hoàn tiền đã có trong dữ liệu.
+- AI giải thích chính sách hoàn vé dựa trên dữ liệu nhưng không tự gửi yêu cầu.
+- Không chọn hỏi lại ngay vì khách chỉ hỏi về quyền hoàn tiền.
+- Không chuyển nhân viên ngay vì AI có dữ liệu chính sách. Nếu không xác minh được thì mới chuyển nhân viên.
 
 ### 2. AI nói gì, nguyên văn?
 
-- "Chuyến bay của bạn đã bị huỷ do bão nên bạn có quyền được hoàn toàn bộ tiền vé hoặc đổi chuyến miễn phí một lần trong 48 giờ. Bạn có muốn tìm hiểu quy trình hoàn tiền không? Tôi chưa gửi yêu cầu hoàn vé."
-- Không hứa tiền về ngay hay tự động hoàn tiền.
+- "Chuyến bay của bạn đã bị huỷ do bão. Theo chính sách, bạn được hoàn toàn bộ tiền vé hoặc đổi chuyến miễn phí một lần trong 48 giờ. Nếu gửi yêu cầu hoàn, bạn không thể huỷ yêu cầu sau đó. Tôi chưa thực hiện thao tác hoàn vé nào. Bạn có muốn xem hướng dẫn hoàn tiền không?"
+- Không hứa tiền về ngay hoặc cam kết thời gian hoàn khi chưa có dữ liệu.
 
 ### 3. Người dùng thấy gì trên màn hình?
 
-- Trạng thái: Chưa gửi yêu cầu hoàn tiền.
-- Chính sách: Được hoàn toàn bộ tiền vé.
+- Trạng thái: Chưa gửi yêu cầu hoàn vé.
+- Độ chắc chắn: Thông tin chính sách đã được xác minh từ dữ liệu đặt chỗ, không hiển thị tỷ lệ tự đoán.
+- Bằng chứng: Mã đặt chỗ TRV-7Q2K, chuyến BM 213 đã huỷ do bão và chính sách hoàn toàn bộ vé.
 - Cảnh báo: Gửi yêu cầu hoàn rồi không thể huỷ.
 - Nút: "Xem chính sách", "Tiếp tục hoàn vé", "Gặp nhân viên".
 
 ### 4. Người dùng có thể làm gì tiếp?
 
-- Xem chính sách hoàn tiền.
-- Tiếp tục quy trình hoàn vé và xác nhận trước khi gửi.
+- Xem chính sách và điều kiện hoàn tiền.
+- Tiếp tục quy trình hoàn vé, xác nhận rõ trước khi gửi.
 - Chọn đổi chuyến hoặc gặp nhân viên.
-- Nếu không làm gì: Không có yêu cầu hoàn vé nào được gửi, vé không bị AI thay đổi.
+- Nếu không làm gì: AI không tự gửi yêu cầu hoàn hoặc thay đổi vé.
+- Nếu AI đã gửi nhầm: Không thể tự hoàn tác qua tool, phải chuyển nhân viên hỗ trợ ngay.
 
-### 5. Ai được báo và khi nào?
+### 5. Ai được báo và sau bao lâu?
 
-- Khách hàng: Được thông báo ngay khi AI chuẩn bị thực hiện thao tác hoàn vé.
-- Nhân viên: Được báo ngay nếu AI đã gửi nhầm yêu cầu hoàn.
-- Nhân viên thấy: Mã đặt chỗ, thao tác đã thực hiện, thời gian, lịch sử chat và trạng thái yêu cầu hoàn.
+- Khách hàng: Được cảnh báo trước khi xác nhận gửi yêu cầu hoàn vé.
+- Nếu AI gửi nhầm: Báo khách ngay khi phát hiện lỗi.
+- Nhân viên: Nhận cảnh báo ngay khi hệ thống phát hiện yêu cầu hoàn gửi sai.
+- Nhân viên thấy: Mã đặt chỗ, thời gian thực hiện, lịch sử chat, thao tác AI đã làm và trạng thái yêu cầu hoàn.
+- Đây là cơ chế thông báo do nhóm đề xuất thiết kế.
 
 ### 6. Đây là loại lỗi gì?
 
-- Lỗi hệ thống: AI hiểu câu hỏi thành yêu cầu thực hiện.
-- Không phải lỗi khách hàng vì họ chỉ đang hỏi.
-- AI phải xin lỗi, thông báo rõ yêu cầu đã được gửi hay chưa và chuyển nhân viên nếu đã gửi nhầm.
+- Phân loại: Lỗi hệ thống.
+- Nguyên nhân: AI hiểu câu hỏi về chính sách thành lệnh thực hiện hoàn vé.
+- Không phải lỗi người dùng vì khách chưa yêu cầu gửi hoàn vé.
+- Cách xử lý: AI xin lỗi, thông báo trung thực trạng thái yêu cầu hoàn và chuyển nhân viên nếu đã gửi nhầm.
+- Cách khắc phục: Sửa quy trình xác nhận, không chỉ sửa nội dung câu trả lời.
 
 ### 7. Chỉ sửa câu chữ có đủ không?
 
 - Không đủ, phải thay đổi thiết kế hệ thống.
-- Bắt buộc khách xác nhận rõ trước khi gọi `gui_yeu_cau_hoan_ve`.
-- Hiển thị cảnh báo thao tác không thể hoàn tác.
-- Không cho AI tự gửi yêu cầu hoàn chỉ dựa trên câu hỏi của khách.
-
-
-Với mỗi kịch bản đắt nhất:
-- AI nói gì (nguyên văn) · người dùng thấy gì · làm gì tiếp · ai được báo, sau bao lâu.
-- Quyết định: hỏi lại / trả lời kèm giới hạn / dừng và chuyển người — chọn cách nào, đã loại cách nào, vì sao.
-- Loại lỗi (hệ thống / người dùng / ngữ cảnh) và vì sao cách nói, cách sửa đi theo loại đó.
-- 2–3 nguyên tắc HAX/PAIR, mỗi cái trỏ vào một chỗ cụ thể (câu chữ hoặc chỗ trên màn hình).
-- Lỗi nào sửa câu chữ không cứu được (nếu có), và thiết kế cứu nó thế nào.
+- Bắt buộc xác nhận rõ hành khách và yêu cầu hoàn trước khi gọi `gui_yeu_cau_hoan_ve`.
+- Hiển thị cảnh báo không thể hoàn tác trước khi xác nhận.
+- Chặn AI tự gọi tool hoàn vé khi khách chỉ hỏi thông tin.
+- Lưu lịch sử thao tác để phát hiện và xử lý lỗi.
 
 
 ## §4. Mức tự chủ  (chặng 4)
