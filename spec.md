@@ -479,6 +479,60 @@ Lời hứa này hiện thành trạng thái cụ thể: **chưa đổi → đã
 
 ## §5. Prototype (chặng 5)
 
+## 5.1 Đánh giá và demo Prototype
+
+### 1. Demo 4 phút — Bấm vào đâu, thấy gì?
+
+- Phút 1: Mở màn hình 1, hiển thị thông tin chuyến bay bị huỷ, câu hỏi của khách và chính sách hoàn vé.
+- Phút 2: Bấm "Tiếp tục hoàn vé", hệ thống hiển thị cảnh báo không thể huỷ yêu cầu sau khi gửi và bước xác nhận.
+- Phút 3: Bấm "Mô phỏng AI gửi nhầm", chuyển sang màn hình 2, hiển thị yêu cầu đã gửi khi khách chưa xác nhận.
+- Phút 4: Bấm "Gặp nhân viên", hiển thị trạng thái chuyển hỗ trợ và thông tin bàn giao.
+- Màn hình 2 thể hiện rõ nhất cách xử lý lỗi ở chặng 3–4 vì AI đã thực hiện thao tác không thể hoàn tác.
+
+### 2. Người dùng biết AI chắc tới đâu và dựa vào đâu?
+
+- Khi có dữ liệu: Hiển thị trạng thái "Đã xác minh".
+- Bằng chứng: Mã đặt chỗ TRV-7Q2K, chuyến BM 213 đã huỷ do bão và chính sách của hãng Bay Mẫu.
+- Khi thiếu dữ liệu: Hiển thị "Chưa xác minh được", không tự đoán.
+- Không hiển thị tỷ lệ tin cậy giả như 90% hoặc 100%.
+
+### 3. Các mức tự chủ của AI trên màn hình
+
+- Tự động: AI được gọi tra_cuu_dat_cho và hiển thị kết quả. Không cần hoàn tác vì chỉ đọc dữ liệu.
+- Cần xác nhận: Với gui_yeu_cau_hoan_ve, khách phải xem thông tin hành khách, cảnh báo không thể huỷ và tự bấm "Xác nhận gửi yêu cầu".
+- Cấm: AI không được tự gửi yêu cầu hoàn vé khi khách chưa xác nhận.
+- Khi gặp yêu cầu ngoài thẩm quyền: Hiển thị nút "Gặp nhân viên".
+- Khi AI gửi nhầm: Không có nút hoàn tác vì yêu cầu hoàn đã gửi không thể huỷ.
+
+### 4. Vị trí các nguyên tắc HAX/PAIR
+
+- G10 — Thu hẹp phạm vi khi nghi ngờ: Thể hiện tại bước xác nhận trước khi gửi hoàn vé. AI không tự gửi khi khách chỉ hỏi thông tin.
+- G11 — Giải thích vì sao: Thể hiện tại phần thông tin đặt chỗ, trạng thái chuyến bay và căn cứ chính sách hoàn vé trên màn hình 1.
+- G9 — Sửa dễ dàng: Thể hiện tại màn hình 2 qua nút "Gặp nhân viên", cho phép khách báo sai và yêu cầu hỗ trợ.
+- Giới hạn G9: Không thể đảm bảo hoàn tác yêu cầu hoàn vé đã gửi.
+
+### 5. Khi gặp tình huống lạ chưa chuẩn bị
+
+- Prototype đi theo đường Low-confidence hoặc Graceful Failure.
+- Hiển thị thông báo chưa đủ thông tin để xử lý.
+- Không tự thực hiện thao tác có rủi ro.
+- Cho khách chọn "Thử lại" hoặc "Gặp nhân viên".
+- Vì đây là prototype không có AI thật, các tình huống lạ được mô phỏng bằng đường xử lý dự phòng.
+
+### 6. Phương án thiết kế khác và lý do không chọn
+
+- Phương án 1: AI tự động gửi hoàn vé ngay.
+- Không chọn: Dễ gây hậu quả không thể hoàn tác khi hiểu sai ý khách.
+
+- Phương án 2: Chuyển mọi yêu cầu cho nhân viên.
+- Không chọn: Làm khách chờ lâu dù AI có thể tự giải thích chính sách.
+
+- Phương án 3: Chỉ hiển thị lời xin lỗi khi AI sai.
+- Không chọn: Không giúp khách biết trạng thái yêu cầu và không có hướng giải quyết.
+
+- Phương án được chọn: AI tự tra cứu và giải thích, khách xác nhận thao tác quan trọng, trường hợp sai hoặc vượt thẩm quyền được chuyển nhân viên.
+- Lý do: Cân bằng tốc độ xử lý, an toàn và quyền quyết định của khách.
+
 
 ## 5.2. Thông tin Prototype và bằng chứng
 
