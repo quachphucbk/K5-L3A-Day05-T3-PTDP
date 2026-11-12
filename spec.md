@@ -56,7 +56,7 @@
 
 ## §3. Khi AI sai  (chặng 3)
 
-## Kịch bản — AI tự ý hoàn vé khi khách chưa xác nhận
+## 3.1 Kịch bản — AI tự ý hoàn vé khi khách chưa xác nhận
 
 - Tin người dùng: "Nếu tôi không bay nữa thì có được hoàn tiền không?"
 - Lớp: ④ Đặc thù domain.
@@ -117,6 +117,43 @@
 - Chặn AI tự gọi tool hoàn vé khi khách chỉ hỏi thông tin.
 - Lưu lịch sử thao tác để phát hiện và xử lý lỗi.
 
+## 3.2. Bốn đường đi của trải nghiệm
+
+### Kịch bản: AI tự ý hoàn vé khi khách chưa xác nhận
+
+- Tin người dùng: "Nếu tôi không bay nữa thì có được hoàn tiền không?"
+- Lớp: ④ Đặc thù domain.
+- Nhãn: Không chấp nhận được.
+
+### 1. Happy path — AI xử lý đúng
+
+- AI nhận biết khách chỉ đang hỏi về chính sách hoàn tiền.
+- Gọi `tra_cuu_dat_cho` để kiểm tra thông tin.
+- Thông báo khách được hoàn toàn bộ vé vì chuyến bị huỷ do bão.
+- Hiển thị nút "Xem chính sách" và "Tiếp tục hoàn vé".
+- Không tự gọi `gui_yeu_cau_hoan_ve` khi khách chưa xác nhận.
+
+### 2. Low-confidence — AI không chắc chắn
+
+- AI không truy xuất được dữ liệu đặt chỗ hoặc chính sách.
+- Thông báo: "Hiện tôi chưa xác minh được điều kiện hoàn tiền của vé này."
+- Hiển thị nút "Thử lại" và "Gặp nhân viên".
+- Không tự gửi yêu cầu hoàn tiền khi chưa xác minh.
+
+### 3. Failure — AI xử lý sai
+
+- AI hiểu câu hỏi "Có được hoàn tiền không?" thành yêu cầu hoàn vé.
+- Tự gọi `gui_yeu_cau_hoan_ve` khi khách chưa xác nhận.
+- Yêu cầu hoàn vé được gửi và không thể huỷ.
+- Khách có nguy cơ mất cơ hội đổi chuyến và phải chờ xử lý hoàn tiền.
+
+### 4. Correction — Người dùng sửa AI
+
+- Khách phản hồi: "Tôi chỉ hỏi thôi, ai bảo bạn hoàn vé?"
+- AI kiểm tra xem yêu cầu hoàn đã được gửi hay chưa.
+- Nếu chưa gửi: Dừng thao tác và xác nhận vé chưa bị thay đổi.
+- Nếu đã gửi: Xin lỗi, thông báo không thể tự huỷ yêu cầu và gọi `chuyen_nhan_vien` ngay.
+- Nhân viên nhận thông tin đặt chỗ, lịch sử trò chuyện và thao tác sai.
 
 ## §4. Mức tự chủ  (chặng 4)
 Với mỗi tool:
